@@ -9,17 +9,62 @@
 // Helper functions
 ////////////////////////////////////////////////////////////////////////
 
-int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
-  
+//done
+static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
+  if (x>= *img.width || y>=*img.height) {
+    return 1;
+  }
+  return 0;
 }
+
 uint32_t compute_index(struct Image *img, int32_t x, int32_t y);
-int32_t clamp(int32_t val, int32_t min, int32_t max);
-uint8_t get_r(uint32_t color);
-uint8_t get_g(uint32_t color);
-uint8_t get_b(uint32_t color);
-uint8_t get_a(uint32_t color);
-uint8_t blend_components(uint32_t fg, uint32_t bg, uint32_t alpha);
-uint32_t blend_colors(uint32_t fg, uint32_t bg);
+
+//done
+static int32_t clamp(int32_t val, int32_t min, int32_t max) {
+  if (val < min) {
+    val = min;
+  }
+  else if (val>max) {
+    val = max;
+  }
+  return val;
+}
+
+//done
+uint8_t get_r(uint32_t color) {
+  return (color >> 24) & 255;
+}
+
+//done
+uint8_t get_g(uint32_t color) {
+  return (color >> 16) & 255;
+}
+
+//done
+uint8_t get_b(uint32_t color) {
+  return (color >> 8) & 255;
+}
+
+//done
+uint8_t get_a(uint32_t color) {
+  return color & 255;
+}
+
+//done
+static uint8_t blend_components(uint32_t fg, uint32_t bg, uint32_t alpha) {
+  return (alpha*fg+(255−alpha)*bg)/255;
+}
+
+//done
+uint32_t blend_colors(uint32_t fg, uint32_t bg) {
+  uint32_t r = blend_components(get_r(fg), get_r(bg), get_a(fg));
+  uint32_t g = blend_components(get_g(fg), get_g(bg), get_a(fg));
+  uint32_t b = blend_components(get_b(fg), get_b(bg), get_a(fg));
+  uint32_t final = (r << 24) + (g << 16) + (b << 8) + 256;
+  return final;
+}
+
+
 void set_pixel(struct Image *img, uint32_t index, uint32_t color);
 int64_t square(int64_t x);
 int64_t square_dist(int64_t x1, int64_t y1, int64_t x2, int64_t y2);

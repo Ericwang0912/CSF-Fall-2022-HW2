@@ -11,7 +11,7 @@
 
 //done
 static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
-  if (x>= *img.width || y>=*img.height) {
+  if (x>= &img->width || y>= &img->height) {
     return 1;
   }
   return 0;
@@ -19,10 +19,9 @@ static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
 
 //done
 uint32_t compute_index(struct Image *img, int32_t x, int32_t y) {
-  uint32_t width = *img.width;
-  uint32_t height = *img.height;
-  uint32_t index = width*y + x;
-  return index;
+  uint32_t val;
+  val = x * (&img->width) + y;
+  return val;
 }
 
 //done
@@ -72,8 +71,18 @@ uint32_t blend_colors(uint32_t fg, uint32_t bg) {
 
 
 void set_pixel(struct Image *img, uint32_t index, uint32_t color);
-int64_t square(int64_t x);
-int64_t square_dist(int64_t x1, int64_t y1, int64_t x2, int64_t y2);
+
+//done
+int64_t square(int64_t x) {
+  int64_t val = x * x;
+  return val;
+}
+
+//done
+int64_t square_dist(int64_t x1, int64_t y1, int64_t x2, int64_t y2) {
+  int64_t val = square(x1 - x2) + square(y1 - y2);
+  return val;
+}
 
 ////////////////////////////////////////////////////////////////////////
 // API functions

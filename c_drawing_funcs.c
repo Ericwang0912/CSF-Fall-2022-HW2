@@ -17,7 +17,13 @@ static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
   return 0;
 }
 
-uint32_t compute_index(struct Image *img, int32_t x, int32_t y);
+//done
+uint32_t compute_index(struct Image *img, int32_t x, int32_t y) {
+  uint32_t width = *img.width;
+  uint32_t height = *img.height;
+  uint32_t index = width*y + x;
+  return index;
+}
 
 //done
 static int32_t clamp(int32_t val, int32_t min, int32_t max) {

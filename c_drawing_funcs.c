@@ -11,7 +11,7 @@
 
 //done
 static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
-  if (x>= img->width || y>= img->height) {
+  if ((x>= img->width) || (y>= img->height)) {
     return 1;
   }
   return 0;

@@ -69,8 +69,11 @@ uint32_t blend_colors(uint32_t fg, uint32_t bg) {
   return final;
 }
 
-
-void set_pixel(struct Image *img, uint32_t index, uint32_t color);
+//done
+void set_pixel(struct Image *img, uint32_t index, uint32_t color) {
+  uint32_t bg_color = img->data[index];
+  img->data[index] = blend_colors(color, bg_color);
+}
 
 //done
 int64_t square(int64_t x) {

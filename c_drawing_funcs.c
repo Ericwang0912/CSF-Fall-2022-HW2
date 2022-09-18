@@ -20,7 +20,7 @@ static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
 //done
 uint32_t compute_index(struct Image *img, int32_t x, int32_t y) {
   uint32_t val;
-  val = x * (&img->width) + y;
+  val = y * (&img->width) + x;
   return val;
 }
 

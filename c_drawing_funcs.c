@@ -11,7 +11,7 @@
 
 //done
 static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
-  if (x>= &img->width || y>= &img->height) {
+  if ((x>= img->width) || (y>= img->height)) {
     return 1;
   }
   return 0;
@@ -20,7 +20,11 @@ static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
 //done
 uint32_t compute_index(struct Image *img, int32_t x, int32_t y) {
   uint32_t val;
+<<<<<<< HEAD
   val = y * (&img->width) + x;
+=======
+  val = y * (img->width) + x;
+>>>>>>> 0a82c555c070271e1e6302a508b618bde3334a94
   return val;
 }
 
@@ -69,8 +73,11 @@ uint32_t blend_colors(uint32_t fg, uint32_t bg) {
   return final;
 }
 
-
-void set_pixel(struct Image *img, uint32_t index, uint32_t color);
+//done
+void set_pixel(struct Image *img, uint32_t index, uint32_t color) {
+  uint32_t bg_color = img->data[index];
+  img->data[index] = blend_colors(color, bg_color);
+}
 
 //done
 int64_t square(int64_t x) {
@@ -114,7 +121,11 @@ void draw_pixel(struct Image *img, int32_t x, int32_t y, uint32_t color) {
 void draw_rect(struct Image *img,
                const struct Rect *rect,
                uint32_t color) {
-  // TODO: implement
+  for (int i = rect->y; i < rect->y + rect->height; i++) {
+    for (int j = rect->x; j < rect->x + rect->width; j++) {
+      draw_pixel(img, j, i, color);
+    }
+  }
 }
 
 //
@@ -131,7 +142,13 @@ void draw_rect(struct Image *img,
 void draw_circle(struct Image *img,
                  int32_t x, int32_t y, int32_t r,
                  uint32_t color) {
-  // TODO: implement
+  for (int i = 0; i < img->height; i++) {
+    for (int j = 0; j < img->width; j++) {
+      if (square_dist(j, i, x, y) <= square(r)) {
+        draw_pixel(img, j, i, color);
+      }
+    }
+  }
 }
 
 //
@@ -152,7 +169,17 @@ void draw_tile(struct Image *img,
                int32_t x, int32_t y,
                struct Image *tilemap,
                const struct Rect *tile) {
- // TODO: implement
+  for (int i = tile->y; i < tile->y + tile->height; i++) {
+    for (int j = tile->x; j < tile->x + tile->width; j++) {
+      int ind = compute_index(img, j, i);
+      for (int k = y; k < y + tile->height; k++) {
+        for (int l = x; l < x + tile->width; l++) {
+          int ind2 = compute_index(img, l, k);
+          img->data[ind2] = tilemap->data[ind];
+        }
+      }
+    }
+  }
 }
 
 //

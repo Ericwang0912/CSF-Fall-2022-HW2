@@ -165,7 +165,17 @@ void draw_tile(struct Image *img,
                int32_t x, int32_t y,
                struct Image *tilemap,
                const struct Rect *tile) {
- // TODO: implement
+  for (int i = tile->y; i < tile->y + tile->height; i++) {
+    for (int j = tile->x; j < tile->x + tile->width; j++) {
+      int ind = compute_index(img, j, i);
+      for (int k = y; k < y + tile->height; k++) {
+        for (int l = x; l < x + tile->width; l++) {
+          int ind2 = compute_index(img, l, k);
+          img->data[ind2] = tilemap->data[ind];
+        }
+      }
+    }
+  }
 }
 
 //

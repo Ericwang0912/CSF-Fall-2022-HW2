@@ -193,16 +193,17 @@ void draw_sprite(struct Image *img, int32_t x, int32_t y, struct Image *spritema
   if (in_bounds(spritemap, sprite->x, sprite->y) == 1) {
     return;
   }
-  int32_t min_x = clamp(tile->x, 0, img->width);
-  int32_t max_x = clamp(tile->x + tile->width, 0, img->width);
-  int32_t min_y = clamp(tile->y, 0, img->height);
-  int32_t max_y = clamp(tile->y + tile->height, 0, img->height);
-  for (int i = min_x; i < max_x; i++) {
-    for (int j = min_y; j < max_y; j++) {
-      for (int k = x; k < x + tile->width; k++) {
-        for (int l = y; l < y + tile->height; l++) {
-          int tileIndex = compute_index(img, k, l);
-          draw_pixel(img, x, y, spritemap->data[tileIndex]);
+  if (in_bounds(spritemap, sprite->x + sprite->width, sprite->y + sprite->height) == 1) {
+    return;
+  }
+  int32_t clampedWidth = clamp(sprite->width, 0, img->width - x);
+  int32_t clampedHeight = clamp(sprite->height, 0, img->height - y);
+  for (int i = sprite->x; i < sprite->x + clampedWidth; i++) {
+    for (int j = sprite->y; j < sprite->y + clampedHeight; j++) {
+      int spriteIndex = compute_index(spritemap, i, j);
+      for (int k = x; k < x + clampedWidth; k++) {
+        for (int l = y; l < y + clampedHeight; l++) {
+          draw_pixel(img, k, l, spritemap->data[spriteIndex]) {
         }
       }
     }

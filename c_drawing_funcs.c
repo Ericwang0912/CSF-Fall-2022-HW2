@@ -197,14 +197,14 @@ void draw_sprite(struct Image *img, int32_t x, int32_t y, struct Image *spritema
   if (in_bounds(spritemap, sprite->x + sprite->width, sprite->y + sprite->height) == 1) {
     return;
   }
-  int32_t clampedWidth = clamp(tile->width, 0, img->width - x);
-  int32_t clampedHeight = clamp(tile->height, 0, img->height - y);
+  int32_t clampedWidth = clamp(sprite->width, 0, img->width - x);
+  int32_t clampedHeight = clamp(sprite->height, 0, img->height - y);
   int32_t yIndex = y;
   int32_t xIndex = x;
   for (int i = tile->x; i < tile->x + clampedWidth; i++) {
     yIndex = y;
     for (int j = tile->y; j < tile->y + clampedHeight; j++) {
-      int tileIndex = compute_index(tilemap, i, j);
+      int tileIndex = compute_index(spritemap, i, j);
       draw_pixel(img, xIndex, yIndex, spritemap->data[spriteIndex]);
       yIndex++;
     }

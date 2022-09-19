@@ -156,18 +156,17 @@ void draw_tile(struct Image *img, int32_t x, int32_t y, struct Image *tilemap, c
   if (in_bounds(tilemap, tile->x, tile->y) == 1) {
     return;
   }
-
-  int32_t min_x = clamp(tile->x, 0, img->width);
-  int32_t max_x = clamp(tile->x + tile->width, 0, img->width);
-  int32_t min_y = clamp(tile->y, 0, img->height);
-  int32_t max_y = clamp(tile->y + tile->height, 0, img->height);
-
-  for (int i = min_x; i < max_x; i++) {
-    for (int j = min_y; j < max_y; j++) {
-      int imageIndex = compute_index(img, i, j);
-      for (int k = x; k < x + tile->width; k++) {
-        for (int l = y; l < y + tile->height; l++) {
-          int tileIndex = compute_index(img, k, l);
+  if (in_bounds(tilemap, tile->x + tile->width, tile->y + tile->height) == 1) {
+    return;
+  }
+  int32_t clampedWidth = clamp(tile->width, 0, img->width - x);
+  int32_t clampedHeight = clamp(tile->height, 0, img->height - y);
+  for (int i = tile->x; i < tile->x + clampedWidth; i++) {
+    for (int j = tile->y; j < tile->y + clampedHeight; j++) {
+      int tileIndex = compute_index(tilemap, i, j);
+      for (int k = x; k < x + clampedWidth; k++) {
+        for (int l = y; l < y + clampedHeight; l++) {
+          int imageIndex = compute_index(img, k, l);
           img->data[imageIndex] = tilemap->data[tileIndex];
         }
       }
@@ -194,14 +193,16 @@ void draw_sprite(struct Image *img, int32_t x, int32_t y, struct Image *spritema
   if (in_bounds(spritemap, sprite->x, sprite->y) == 1) {
     return;
   }
-  for (int i = tile->y; i < tile->y + tile->height; i++) {
-    for (int j = tile->x; j < tile->x + tile->width; j++) {
-      int ind = compute_index(img, j, i);
-      for (int k = y; k < y + tile->height; k++) {
-        for (int l = x; l < x + tile->width; l++) {
-          int ind2 = compute_index(img, l, k);
-          uint32_t temp = img->data[ind2];
-          img->data[ind2] = blend_colors(tilemap->data[ind], temp);
+  int32_t min_x = clamp(tile->x, 0, img->width);
+  int32_t max_x = clamp(tile->x + tile->width, 0, img->width);
+  int32_t min_y = clamp(tile->y, 0, img->height);
+  int32_t max_y = clamp(tile->y + tile->height, 0, img->height);
+  for (int i = min_x; i < max_x; i++) {
+    for (int j = min_y; j < max_y; j++) {
+      for (int k = x; k < x + tile->width; k++) {
+        for (int l = y; l < y + tile->height; l++) {
+          int tileIndex = compute_index(img, k, l);
+          draw_pixel(img, x, y, spritemap->data[tileIndex]);
         }
       }
     }

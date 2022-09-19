@@ -153,6 +153,9 @@ void draw_circle(struct Image *img, int32_t x, int32_t y, int32_t r, uint32_t co
 //   tile    - pointer to Rect (the tile)
 //
 void draw_tile(struct Image *img, int32_t x, int32_t y, struct Image *tilemap, const struct Rect *tile) {
+  if (in_bounds(tilemap, tile->x, tile->y) == 1) {
+    return;
+  }
   for (int i = tile->y; i < tile->y + tile->height; i++) {
     for (int j = tile->x; j < tile->x + tile->width; j++) {
       int ind = compute_index(img, j, i);
@@ -182,13 +185,17 @@ void draw_tile(struct Image *img, int32_t x, int32_t y, struct Image *tilemap, c
 //   sprite    - pointer to Rect (the sprite)
 //
 void draw_sprite(struct Image *img, int32_t x, int32_t y, struct Image *spritemap, const struct Rect *sprite) {
+  if (in_bounds(spritemap, sprite->x, sprite->y) == 1) {
+    return;
+  }
   for (int i = tile->y; i < tile->y + tile->height; i++) {
     for (int j = tile->x; j < tile->x + tile->width; j++) {
       int ind = compute_index(img, j, i);
       for (int k = y; k < y + tile->height; k++) {
         for (int l = x; l < x + tile->width; l++) {
           int ind2 = compute_index(img, l, k);
-          img->data[ind2] = tilemap->data[ind];
+          uint32_t temp = img->data[ind2];
+          img->data[ind2] = blend_colors(tilemap->data[ind], temp);
         }
       }
     }

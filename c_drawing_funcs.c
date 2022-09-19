@@ -48,7 +48,7 @@ uint8_t get_a(uint32_t color) {
 }
 
 static uint8_t blend_components(uint32_t fg, uint32_t bg, uint32_t alpha) {
-  return (alpha*fg+(255−alpha)*bg)/255;
+  return (alpha*fg+(255-alpha)*bg)/255;
 }
 
 uint32_t blend_colors(uint32_t fg, uint32_t bg) {

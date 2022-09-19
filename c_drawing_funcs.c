@@ -161,16 +161,17 @@ void draw_tile(struct Image *img, int32_t x, int32_t y, struct Image *tilemap, c
   }
   int32_t clampedWidth = clamp(tile->width, 0, img->width - x);
   int32_t clampedHeight = clamp(tile->height, 0, img->height - y);
+  int32_t yIndex = y;
+  int32_t xIndex = x;
   for (int i = tile->x; i < tile->x + clampedWidth; i++) {
+    yIndex = y;
     for (int j = tile->y; j < tile->y + clampedHeight; j++) {
       int tileIndex = compute_index(tilemap, i, j);
-      for (int k = x; k < x + clampedWidth; k++) {
-        for (int l = y; l < y + clampedHeight; l++) {
-          int imageIndex = compute_index(img, k, l);
-          img->data[imageIndex] = tilemap->data[tileIndex];
-        }
-      }
+      int imageIndex = compute_index(img, x, y);
+      img->data[imageIndex] = tilemap->data[tileIndex];
+      yIndex++;
     }
+    xIndex++;
   }
 }
 

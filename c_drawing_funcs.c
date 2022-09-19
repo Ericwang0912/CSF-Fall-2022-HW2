@@ -191,7 +191,7 @@ void draw_tile(struct Image *img, int32_t x, int32_t y, struct Image *tilemap, c
 //   sprite    - pointer to Rect (the sprite)
 //
 void draw_sprite(struct Image *img, int32_t x, int32_t y, struct Image *spritemap, const struct Rect *sprite) {
-  if (in_bounds(spritemap, sprite->x, sprite->y) == 1) {
+  if (in_bounds(spritemap, sprite->x, sprite->y)==1) {
     return;
   }
   if (in_bounds(spritemap, sprite->x + sprite->width, sprite->y + sprite->height) == 1) {

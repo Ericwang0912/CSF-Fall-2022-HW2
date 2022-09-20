@@ -16,6 +16,21 @@
 // Helper functions
 ////////////////////////////////////////////////////////////////////////
 
+/*
+ * Determine whether or not a particular pixel (represented by an x/y position) falls within
+ * the width and height range of an image (containing x/y positions)
+ * If the pixel falls within the image range, 0 is returned
+ * If the pixel is not within the image range, 1 is returned
+ *
+ * Parameters:
+ *   img  - pointer to the image struct
+ *   x - int32_t value of width position of pixel
+ *   y - int32_t value of height position of pixel
+ *
+ * Returns:
+ *   an integer (0 or 1) represented the status of an x and y posiition
+ *   being within the bounds of an image or not
+ */
 static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
   if ((x >= img->width) || (y >= img->height) || x<0 || y<0) {
     return 1;
@@ -23,11 +38,39 @@ static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
   return 0;
 }
 
+/*
+ * Converts the x/y position representing a pixel within an image to an
+ * index within an array pointed to by "data" within the image struct containing color information
+ * returns the index within the array pointed to by "data" represented by the
+ * equivalent x/y position given. This function is only ever called after 
+ * in_bounds returns 0 and does not handle out of bounds x/y values.
+ * 
+ * Parameters:
+ *   img  - pointer to the image struct
+ *   x - int32_t value of width position of pixel
+ *   y - int32_t value of height position of pixel
+ *
+ * Returns:
+ *   a uint32_t value that represents the index within the array pointed to by "data"
+ *   that would contain the same information as the (x,y) within the image
+ */
 uint32_t compute_index(struct Image *img, int32_t x, int32_t y) {
   uint32_t val = y * (img->width) + x;
   return val;
 }
 
+/*
+ * Constrains a value within the bounds of (min, max) if it
+ * is not already within range. returns the adjusted value
+ * 
+ * Parameters:
+ *   val - int32_t value to be constrained within (min, max)
+ *   min - int32_t value of lower bound of constraint
+ *   max - int32_t value of upper bound of constraint
+ *
+ * Returns:
+ *   a uint32_t value that is within the bounds of (min, max)
+ */
 static int32_t clamp(int32_t val, int32_t min, int32_t max) {
   if (val < min) {
     val = min;

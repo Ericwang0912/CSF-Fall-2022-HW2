@@ -1,3 +1,10 @@
+/*
+ * Head file for drawing functions for drawing functions program
+ * CSF Assignment 2
+ * Iris Gupta and Eric Wang
+ * igupta5@jh.edu and ewang42@jhu.edu
+ */
+
 #ifndef DRAWING_FUNCS_H
 #define DRAWING_FUNCS_H
 

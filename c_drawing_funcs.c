@@ -1,3 +1,10 @@
+/*
+ * Implementation of drawing functions and associated helper functions for drawing functions program
+ * CSF Assignment 2
+ * Iris Gupta and Eric Wang
+ * igupta5@jh.edu and ewang42@jhu.edu
+ */
+
 // C implementations of drawing functions (and helper functions)
 
 #include <assert.h>

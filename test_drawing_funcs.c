@@ -304,9 +304,11 @@ void test_in_bounds(TestObjs *objs) {
 }
 
 void test_compute_index(TestObjs *objs) {
-  // TO DO: Implement
-  (void) objs;
-  ASSERT(0 == 0);
+  ASSERT(compute_index(&objs->small, 0, 0) == 0);
+  ASSERT(compute_index(&objs->small, 1, 0) == 1);
+  ASSERT(compute_index(&objs->small, 0, 1) == 8);
+  ASSERT(compute_index(&objs->small, 1, 1) == 9);
+  ASSERT(compute_index(&objs->small, 7, 5) == 47);
 }
 
 void test_clamp(TestObjs *objs) {
@@ -352,9 +354,25 @@ void test_blend_colors(TestObjs *objs) {
 }
 
 void test_set_pixel(TestObjs *objs) {
-  // TO DO: Implement
-  (void) objs;
-  ASSERT(0 == 0);
+  uint32_t index1 = compute_index(&objs->small, 3, 2);
+  uint32_t index2 = compute_index(&objs->small, 5, 4);
+  uint32_t index3 = compute_index(&objs->small, 4, 2);
+  
+  // initially objs->small pixels are opaque black
+  ASSERT(objs->small.data[SMALL_IDX(3, 2)] == 0x000000FFU);
+  ASSERT(objs->small.data[SMALL_IDX(5, 4)] == 0x000000FFU);
+  
+  // test drawing completely opaque pixels
+  set_pixel(&objs->small, index1, 0xFF0000FF); // opaque red
+  ASSERT(objs->small.data[SMALL_IDX(3, 2)] == 0xFF0000FF);
+  set_pixel(&objs->small, index2, 0x800080FF); // opaque magenta (half-intensity)
+  ASSERT(objs->small.data[SMALL_IDX(5, 4)] == 0x800080FF);
+  
+  // test color blending
+  set_pixel(&objs->small, index1, 0x00FF0080); // half-opaque full-intensity green
+  ASSERT(objs->small.data[SMALL_IDX(3, 2)] == 0x7F8000FF);
+  set_pixel(&objs->small, index3, 0x0000FF40); // 1/4-opaque full-intensity blue
+  ASSERT(objs->small.data[SMALL_IDX(4, 2)] == 0x000040FF);
 }
 
 void test_square(TestObjs *objs) {
@@ -371,7 +389,10 @@ void test_square(TestObjs *objs) {
 }
 
 void test_square_dist(TestObjs *objs) {
-  // TO DO: Implement
   (void) objs;
-  ASSERT(0 == 0);
+  ASSERT(square_dist(0, 0, 3, 4) == 25);
+  ASSERT(square_dist(3, 4, 0, 0) == 25);
+  ASSERT(square_dist(-3, -4, 0, 0) == 25);
+  ASSERT(square_dist(3, 0, 0, 4) == 25);
+  ASSERT(square_dist(0, 4, 3, 0) == 25);
 }

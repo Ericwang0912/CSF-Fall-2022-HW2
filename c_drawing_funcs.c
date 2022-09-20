@@ -182,16 +182,47 @@ uint32_t blend_colors(uint32_t fg, uint32_t bg) {
   return final;
 }
 
+/*
+ * modify a pixel in the background image to represent the blended
+ * color value of the corresponding pixels in the background and foreground images
+ * 
+ * Parameters:
+ *   img - pointer to the struct Image
+ *   index - uint32_t value representing the index in the background image color array whose value should be modified
+ *   color - uint32_t value representing a color value in the background image
+ */
 void set_pixel(struct Image *img, uint32_t index, uint32_t color) {
   uint32_t bg_color = img->data[index];
   img->data[index] = blend_colors(color, bg_color);
 }
 
+/*
+ * square a value
+ * 
+ * Parameters:
+ *   x - int64_t value to be squared
+ * 
+ * Returns:
+ *   a int64_t value that equals the square of x
+ */
 int64_t square(int64_t x) {
   int64_t val = x * x;
   return val;
 }
 
+/*
+ * calculates the squared distance between two x coordinates and two y coordinates and 
+ * adds them
+ * 
+ * Parameters:
+ *   x1 - int64_t value representing an x coordinate
+ *   x2 - int64_t value representing an x coordinate
+ *   y1 - int64_t value representing an y coordinate
+ *   y2 - int64_t value representing an y coordinate
+ * 
+ * Returns:
+ *   a int64_t value that equals the sum of squared distances
+ */
 int64_t square_dist(int64_t x1, int64_t y1, int64_t x2, int64_t y2) {
   int64_t val = square(x1 - x2) + square(y1 - y2);
   return val;

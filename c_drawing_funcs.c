@@ -61,7 +61,10 @@ uint32_t compute_index(struct Image *img, int32_t x, int32_t y) {
 
 /*
  * Constrains a value within the bounds of (min, max) if it
- * is not already within range. returns the adjusted value
+ * is not already within range. if val is lower than the min,
+ * it is set to the min. if val is higher than the max, it is
+ * set to the max. if val is already between min and max, it is
+ * left alone. returns the adjusted val value
  * 
  * Parameters:
  *   val - int32_t value to be constrained within (min, max)
@@ -81,22 +84,77 @@ static int32_t clamp(int32_t val, int32_t min, int32_t max) {
   return val;
 }
 
+/*
+ * parses the red value from a uint32_t color value by 
+ * isolating the 8 left-most bits. returns the 8 left-most bits of 
+ * the whole color value as the red value
+ * 
+ * Parameters:
+ *   color - int32_t color value containing red, blue, green color information and the alpha information
+ *
+ * Returns:
+ *   a uint8_t value that represents the red color value
+ */
 uint8_t get_r(uint32_t color) {
   return (color >> 24) & 255;
 }
 
+/*
+ * parses the green value from a uint32_t color value by 
+ * isolating the 8 middle-left bits. returns the 8 middle-left bits of 
+ * the whole color value as the green value
+ * 
+ * Parameters:
+ *   color - int32_t color value containing red, blue, green color information and the alpha information
+ *
+ * Returns:
+ *   a uint8_t value that represents the green color value
+ */
 uint8_t get_g(uint32_t color) {
   return (color >> 16) & 255;
 }
 
+/*
+ * parses the blue value from a uint32_t color value by 
+ * isolating the 8 middle-right bits. returns the 8 middle-right bits of 
+ * the whole color value as the blue value
+ * 
+ * Parameters:
+ *   color - int32_t color value containing red, blue, green color information and the alpha information
+ *
+ * Returns:
+ *   a uint8_t value that represents the blue color value
+ */
 uint8_t get_b(uint32_t color) {
   return (color >> 8) & 255;
 }
 
+/*
+ * parses the alpha value from a uint32_t color value by 
+ * isolating the 8 right-most bits. returns the 8 right-most bits of 
+ * the whole color value as the alpha (opacity) value
+ * 
+ * Parameters:
+ *   color - int32_t color value containing red, blue, green color information and the alpha information
+ *
+ * Returns:
+ *   a uint8_t value that represents the alpha value
+ */
 uint8_t get_a(uint32_t color) {
   return color & 255;
 }
 
+/*
+ * parses the alpha value from a uint32_t color value by 
+ * isolating the 8 right-most bits. returns the 8 right-most bits of 
+ * the whole color value as the alpha (opacity) value
+ * 
+ * Parameters:
+ *   color - int32_t color value containing red, blue, green color information and the alpha information
+ *
+ * Returns:
+ *   a uint8_t value that represents the alpha value
+ */
 static uint8_t blend_components(uint32_t fg, uint32_t bg, uint32_t alpha) {
   return (alpha*fg+(255 - alpha)*bg)/255;
 }

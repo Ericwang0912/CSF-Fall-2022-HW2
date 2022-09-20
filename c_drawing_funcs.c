@@ -313,7 +313,7 @@ void draw_tile(struct Image *img, int32_t x, int32_t y, struct Image *tilemap, c
   if (in_bounds(tilemap, tile->x + tile->width-1, tile->y + tile->height-1) == 1) {
     return;
   }
-  int32_t clampedWidth = clamp(tile->width, 0, img->width - x-1);
+  int32_t clampedWidth = clamp(tile->width, 0, img->width - x);
   int32_t clampedHeight = clamp(tile->height, 0, img->height - y-1);
   int32_t yIndex = y;
   int32_t xIndex = x;
@@ -351,7 +351,7 @@ void draw_sprite(struct Image *img, int32_t x, int32_t y, struct Image *spritema
   if (in_bounds(spritemap, sprite->x + sprite->width-1, sprite->y + sprite->height-1) == 1) {
     return;
   }
-  int32_t clampedWidth = clamp(sprite->width, 0, img->width - x-1);
+  int32_t clampedWidth = clamp(sprite->width, 0, img->width - x);
   int32_t clampedHeight = clamp(sprite->height, 0, img->height - y-1);
   int32_t yIndex = y;
   int32_t xIndex = x;

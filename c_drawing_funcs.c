@@ -72,7 +72,7 @@ uint32_t compute_index(struct Image *img, int32_t x, int32_t y) {
  *   max - int32_t value of upper bound of constraint
  *
  * Returns:
- *   a uint32_t value that is within the bounds of (min, max)
+ *   a int32_t value that is within the bounds of (min, max)
  */
 static int32_t clamp(int32_t val, int32_t min, int32_t max) {
   if (val < min) {

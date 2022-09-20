@@ -5,7 +5,6 @@
 #include "image.h"
 #include "drawing_funcs.h"
 #include "tctest.h"
-// TODO: add prototypes for your helper functions
 
 // an expected color identified by a (non-zero) character code
 typedef struct {
@@ -76,13 +75,27 @@ void check_picture(struct Image *img, Picture *p) {
   }
 }
 
-// prototypes of test functions
+// prototypes of test main functions
 void test_draw_pixel(TestObjs *objs);
 void test_draw_rect(TestObjs *objs);
 void test_draw_circle(TestObjs *objs);
 void test_draw_circle_clip(TestObjs *objs);
 void test_draw_tile(TestObjs *objs);
 void test_draw_sprite(TestObjs *objs);
+// prototypes of test helper functions
+void test_in_bounds(TestObjs *objs);
+void test_compute_index(TestObjs *objs); 
+void test_clamp(TestObjs *objs);
+void test_get_r(TestObjs *objs);
+void test_get_g(TestObjs *objs);
+void test_get_b(TestObjs *objs);
+void test_get_a(TestObjs *objs);
+void test_blend_components(TestObjs *objs);
+void test_blend_colors(TestObjs *objs);
+void test_set_pixel(TestObjs *objs);
+void test_square(TestObjs *objs);
+void test_square_dist(TestObjs *objs);
+
 
 int main(int argc, char **argv) {
   if (argc > 1) {
@@ -92,14 +105,28 @@ int main(int argc, char **argv) {
 
   TEST_INIT();
 
-  // TODO: add TEST() directives for your helper functions
+  // TEST() directives for main functions
   TEST(test_draw_pixel);
   TEST(test_draw_rect);
   TEST(test_draw_circle);
   TEST(test_draw_circle_clip);
   TEST(test_draw_tile);
   TEST(test_draw_sprite);
-
+  // TEST() directives for helper functions
+  TEST(test_in_bounds);
+  TEST(test_compute_index);
+  TEST(test_clamp);
+  TEST(test_get_r);
+  TEST(test_get_g);
+  TEST(test_get_b);
+  TEST(test_get_a);
+  TEST(test_blend_components);
+  TEST(test_blend_colors);
+  TEST(test_set_pixel);
+  TEST(test_square);
+  TEST(test_square_dist);
+  
+  
   TEST_FINI();
 }
 
@@ -261,4 +288,83 @@ void test_draw_sprite(TestObjs *objs) {
   };
 
   check_picture(&objs->large, &pic);
+}
+
+void test_in_bounds(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
+}
+
+void test_compute_index(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
+}
+
+void test_clamp(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
+}
+
+void test_get_r(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
+}
+
+void test_get_g(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
+}
+
+void test_get_b(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
+}
+
+void test_get_a(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
+}
+
+void test_blend_components(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
+}
+
+void test_blend_colors(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
+}
+
+void test_set_pixel(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
+}
+
+void test_square(TestObjs *objs) {
+  (void) objs;
+  int64_t a = 0;
+  int64_t b = 1;
+  int64_t c = 0xFFFF;
+
+  ASSERT(square(a) == 0);
+  ASSERT(square(a) == a);
+  ASSERT(square(b) == 1);
+  ASSERT(square(b) == b);
+  ASSERT(square(c) == 0xFFFE0001);
+}
+
+void test_square_dist(TestObjs *objs) {
+  // TO DO: Implement
+  (void) objs;
+  ASSERT(0 == 0);
 }

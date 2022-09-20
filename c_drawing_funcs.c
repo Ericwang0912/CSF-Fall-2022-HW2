@@ -260,10 +260,10 @@ void draw_pixel(struct Image *img, int32_t x, int32_t y, uint32_t color) {
 //   color   - uint32_t color value
 //
 void draw_rect(struct Image *img, const struct Rect *rect, uint32_t color) {
-  int32_t min_x = clamp(rect->x, 0, img->width);
-  int32_t max_x = clamp(rect->x + rect->width, 0, img->width);
-  int32_t min_y = clamp(rect->y, 0, img->height);
-  int32_t max_y = clamp(rect->y + rect->height, 0, img->height);
+  int32_t min_x = clamp(rect->x, 0, img->width-1);
+  int32_t max_x = clamp(rect->x + rect->width, 0, img->width-1);
+  int32_t min_y = clamp(rect->y, 0, img->height-1);
+  int32_t max_y = clamp(rect->y + rect->height, 0, img->height-1);
   for (int i = min_x; i < max_x; i++) {
     for (int j = min_y; j < max_y; j++) {
       draw_pixel(img, i, j, color);

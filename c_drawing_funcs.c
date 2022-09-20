@@ -260,10 +260,10 @@ void draw_pixel(struct Image *img, int32_t x, int32_t y, uint32_t color) {
 //   color   - uint32_t color value
 //
 void draw_rect(struct Image *img, const struct Rect *rect, uint32_t color) {
-  int32_t min_x = clamp(rect->x, 0, img->width-1);
-  int32_t max_x = clamp(rect->x + rect->width, 0, img->width-1);
-  int32_t min_y = clamp(rect->y, 0, img->height-1);
-  int32_t max_y = clamp(rect->y + rect->height, 0, img->height-1);
+  int32_t min_x = clamp(rect->x, 0, img->width);
+  int32_t max_x = clamp(rect->x + rect->width, 0, img->width);
+  int32_t min_y = clamp(rect->y, 0, img->height);
+  int32_t max_y = clamp(rect->y + rect->height, 0, img->height);
   for (int i = min_x; i < max_x; i++) {
     for (int j = min_y; j < max_y; j++) {
       draw_pixel(img, i, j, color);
@@ -310,11 +310,11 @@ void draw_tile(struct Image *img, int32_t x, int32_t y, struct Image *tilemap, c
   if (in_bounds(tilemap, tile->x, tile->y) == 1) {
     return;
   }
-  if (in_bounds(tilemap, tile->x + tile->width, tile->y + tile->height) == 1) {
+  if (in_bounds(tilemap, tile->x + tile->width-1, tile->y + tile->height-1) == 1) {
     return;
   }
-  int32_t clampedWidth = clamp(tile->width, 0, img->width - x);
-  int32_t clampedHeight = clamp(tile->height, 0, img->height - y);
+  int32_t clampedWidth = clamp(tile->width, 0, img->width - x-1);
+  int32_t clampedHeight = clamp(tile->height, 0, img->height - y-1);
   int32_t yIndex = y;
   int32_t xIndex = x;
   for (int i = tile->x; i < tile->x + clampedWidth; i++) {
@@ -348,11 +348,11 @@ void draw_sprite(struct Image *img, int32_t x, int32_t y, struct Image *spritema
   if (in_bounds(spritemap, sprite->x, sprite->y)==1) {
     return;
   }
-  if (in_bounds(spritemap, sprite->x + sprite->width, sprite->y + sprite->height) == 1) {
+  if (in_bounds(spritemap, sprite->x + sprite->width-1, sprite->y + sprite->height-1) == 1) {
     return;
   }
-  int32_t clampedWidth = clamp(sprite->width, 0, img->width - x);
-  int32_t clampedHeight = clamp(sprite->height, 0, img->height - y);
+  int32_t clampedWidth = clamp(sprite->width, 0, img->width - x-1);
+  int32_t clampedHeight = clamp(sprite->height, 0, img->height - y-1);
   int32_t yIndex = y;
   int32_t xIndex = x;
   for (int i = sprite->x; i < sprite->x + clampedWidth; i++) {

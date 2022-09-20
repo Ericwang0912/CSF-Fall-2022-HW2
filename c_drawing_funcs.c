@@ -145,20 +145,35 @@ uint8_t get_a(uint32_t color) {
 }
 
 /*
- * parses the alpha value from a uint32_t color value by 
- * isolating the 8 right-most bits. returns the 8 right-most bits of 
- * the whole color value as the alpha (opacity) value
+ * calculates the value of an individual color component
+ * in a foreground image (either red, blue, or green) being blended
+ * with the value of that same individual color component in a 
+ * background image. returns the calculated color blended value.
  * 
  * Parameters:
- *   color - int32_t color value containing red, blue, green color information and the alpha information
+ *   fg - uint32_t value representing a color component value in the foreground image
+ *   bg - uint32_t value representing a color component value in the background image
+ *   alpha - uint32_t value representing the alpha value to be used in blending calculation
  *
  * Returns:
- *   a uint8_t value that represents the alpha value
+ *   a uint8_t value that represents the blended color component value
  */
 static uint8_t blend_components(uint32_t fg, uint32_t bg, uint32_t alpha) {
   return (alpha*fg+(255 - alpha)*bg)/255;
 }
 
+/*
+ * compile the blended values for each color component into a wholistic color value
+ * by building a 32-bit integer out of 8-bit color component values.
+ * sets alpha value to 255 for total opacity. returns this final color value
+ * 
+ * Parameters:
+ *   fg - uint32_t value representing a color value in the foreground image
+ *   bg - uint32_t value representing a color value in the background image
+ *
+ * Returns:
+ *   a uint32_t value that represents the blended color component value
+ */
 uint32_t blend_colors(uint32_t fg, uint32_t bg) {
   uint32_t r = blend_components(get_r(fg), get_r(bg), get_a(fg));
   uint32_t g = blend_components(get_g(fg), get_g(bg), get_a(fg));

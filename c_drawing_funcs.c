@@ -55,7 +55,7 @@ uint32_t blend_colors(uint32_t fg, uint32_t bg) {
   uint32_t r = blend_components(get_r(fg), get_r(bg), get_a(fg));
   uint32_t g = blend_components(get_g(fg), get_g(bg), get_a(fg));
   uint32_t b = blend_components(get_b(fg), get_b(bg), get_a(fg));
-  uint32_t final = (r << 24) + (g << 16) + (b << 8) + 256;
+  uint32_t final = (r << 24) + (g << 16) + (b << 8) + 255;
   return final;
 }
 

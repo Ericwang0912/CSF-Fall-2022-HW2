@@ -31,7 +31,7 @@
  *   an integer (0 or 1) represented the status of an x and y posiition
  *   being within the bounds of an image or not
  */
-static int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
+int32_t in_bounds(struct Image *img, int32_t x, int32_t y) {
   if ((x >= img->width) || (y >= img->height) || x<0 || y<0) {
     return 1;
   }
@@ -74,7 +74,7 @@ uint32_t compute_index(struct Image *img, int32_t x, int32_t y) {
  * Returns:
  *   a int32_t value that is within the bounds of (min, max)
  */
-static int32_t clamp(int32_t val, int32_t min, int32_t max) {
+int32_t clamp(int32_t val, int32_t min, int32_t max) {
   if (val < min) {
     val = min;
   }
@@ -158,7 +158,7 @@ uint8_t get_a(uint32_t color) {
  * Returns:
  *   a uint8_t value that represents the blended color component value
  */
-static uint8_t blend_components(uint32_t fg, uint32_t bg, uint32_t alpha) {
+uint8_t blend_components(uint32_t fg, uint32_t bg, uint32_t alpha) {
   return (alpha*fg+(255 - alpha)*bg)/255;
 }
 

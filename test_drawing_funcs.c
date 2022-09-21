@@ -298,9 +298,15 @@ void test_draw_sprite(TestObjs *objs) {
 }
 
 void test_in_bounds(TestObjs *objs) {
-  // TO DO: Implement
-  (void) objs;
-  ASSERT(0 == 0);
+  ASSERT(in_bounds(&objs->small, 0, 0) == 0);
+  ASSERT(in_bounds(&objs->small, -1, 0) == 1);
+  ASSERT(in_bounds(&objs->small, 0, -1) == 1);
+  ASSERT(in_bounds(&objs->small, -1, -1) == 1);
+  
+  ASSERT(in_bounds(&objs->small, 7, 5) == 0);
+  ASSERT(in_bounds(&objs->small, 8, 5) == 1);
+  ASSERT(in_bounds(&objs->small, 7, 6) == 1);
+  ASSERT(in_bounds(&objs->small, 8, 6) == 1);
 }
 
 void test_compute_index(TestObjs *objs) {
@@ -312,45 +318,105 @@ void test_compute_index(TestObjs *objs) {
 }
 
 void test_clamp(TestObjs *objs) {
-  // TO DO: Implement
   (void) objs;
-  ASSERT(0 == 0);
+  ASSERT(clamp(50, 10, 100) == 50);
+  ASSERT(clamp(0, 10, 100) == 10);
+  ASSERT(clamp(1000, 10, 100) == 100);
+  ASSERT(clamp(10, 10, 100) == 10);
+  ASSERT(clamp(100, 10, 100) == 100);
 }
 
 void test_get_r(TestObjs *objs) {
-  // TO DO: Implement
   (void) objs;
-  ASSERT(0 == 0);
+  const uint32_t red = 0xFF0000FF;                    
+  const uint32_t blue = 0x000080FF;                      
+  const uint32_t blend = 0x7F0080FF;                 
+  const uint32_t black = 0x000000FF;
+  
+  ASSERT(get_r(red) == 0xFF);
+  ASSERT(get_r(blue) == 0x00);
+  ASSERT(get_r(blend) == 0x7F);
+  ASSERT(get_r(black) == 0x00);
 }
 
 void test_get_g(TestObjs *objs) {
-  // TO DO: Implement
   (void) objs;
-  ASSERT(0 == 0);
+  const uint32_t red = 0xFF0000FF;
+  const uint32_t blue = 0x000080FF;
+  const uint32_t black = 0x000000FF;
+  const uint32_t new1 = 0x001100FF;
+  const uint32_t new2 = 0x00FF00FF;
+  
+  ASSERT(get_g(red) == 0x00);
+  ASSERT(get_g(blue) == 0x00);
+  ASSERT(get_g(black) == 0x00);
+  ASSERT(get_g(new1) == 0x11);
+  ASSERT(get_g(new2) == 0xFF);
 }
 
 void test_get_b(TestObjs *objs) {
-  // TO DO: Implement
   (void) objs;
-  ASSERT(0 == 0);
+  const uint32_t red = 0xFF0000FF;
+  const uint32_t blue = 0x000080FF;
+  const uint32_t black = 0x000000FF;
+  const uint32_t new1 = 0x000011FF;
+  const uint32_t new2 = 0x0000FFFF;
+
+  ASSERT(get_b(red) == 0x00);
+  ASSERT(get_b(blue) == 0x80);
+  ASSERT(get_b(black) == 0x00);
+  ASSERT(get_b(new1) == 0x11);
+  ASSERT(get_b(new2) == 0xFF);  
 }
 
 void test_get_a(TestObjs *objs) {
-  // TO DO: Implement
   (void) objs;
-  ASSERT(0 == 0);
+  const uint32_t red = 0xFF0000FF;
+  const uint32_t blue = 0x000080FF;
+  const uint32_t black = 0x000000FF;
+  const uint32_t new1 = 0x0000FF00;
+  const uint32_t new2 = 0x0000FF11;
+  
+  ASSERT(get_a(red) == 0xFF);
+  ASSERT(get_a(blue) == 0xFF);
+  ASSERT(get_a(black) == 0xFF);
+  ASSERT(get_a(new1) == 0x00);
+  ASSERT(get_a(new2) == 0x11);
 }
 
 void test_blend_components(TestObjs *objs) {
-  // TO DO: Implement
   (void) objs;
-  ASSERT(0 == 0);
+  const uint32_t red = 0xFF0000FF;
+  const uint32_t blue = 0x000080FF;
+  
+  uint32_t r_val = blend_components(get_r(blue), get_r(red), get_a(red));
+  uint32_t g_val = blend_components(get_g(blue), get_g(red), get_a(red));
+  uint32_t b_val = blend_components(get_b(blue), get_b(red), get_a(red));
+  ASSERT(r_val == 0x00);
+  ASSERT(g_val == 0x00);
+  ASSERT(b_val == 0x80);
+
+  r_val = blend_components(get_r(red), get_r(blue), get_a(red));
+  g_val = blend_components(get_g(red), get_g(blue), get_a(red));
+  b_val = blend_components(get_b(red), get_b(blue), get_a(red));
+  ASSERT(r_val == 0xFF);
+  ASSERT(g_val == 0x00);
+  ASSERT(b_val == 0x00);
 }
 
 void test_blend_colors(TestObjs *objs) {
-  // TO DO: Implement
   (void) objs;
-  ASSERT(0 == 0);
+  const uint32_t red   = 0xFF0000FF;                     
+  const uint32_t blue  = 0x000080FF;                      
+  const uint32_t blend = 0x7F0080FF;                 
+  const uint32_t black = 0x000000FF;
+  
+  ASSERT(blend_colors(red, blue) == 0xFF0000FF);
+  ASSERT(blend_colors(blue, red) == 0x000080FF);
+  ASSERT(blend_colors(red, black) == 0xFF0000FF);
+  ASSERT(blend_colors(blue, black) == 0x000080FF);
+  ASSERT(blend_colors(red, blend) == 0xFF0000FF);
+  ASSERT(blend_colors(blue, blend) == 0x000080FF);
 }
 
 void test_set_pixel(TestObjs *objs) {
@@ -362,7 +428,7 @@ void test_set_pixel(TestObjs *objs) {
   ASSERT(objs->small.data[SMALL_IDX(3, 2)] == 0x000000FFU);
   ASSERT(objs->small.data[SMALL_IDX(5, 4)] == 0x000000FFU);
   
-  // test drawing completely opaque pixels
+  // test setting completely opaque pixels
   set_pixel(&objs->small, index1, 0xFF0000FF); // opaque red
   ASSERT(objs->small.data[SMALL_IDX(3, 2)] == 0xFF0000FF);
   set_pixel(&objs->small, index2, 0x800080FF); // opaque magenta (half-intensity)

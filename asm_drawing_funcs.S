@@ -38,13 +38,13 @@ in_bounds:
 	movl IMAGE_WIDTH_OFFSET(%rdi), %e10d         //store img->width in %e10d
 	movl IMAGE_HEIGHT_OFFSET(%rdi), %e11d        //store img->height in %e11d
 	cmpl %e10d, %esi                             //compare x and image->width
-	jge .LoutOfBounds                            //if x too high, jump
+	jge .LoutOfBounds                            //if x too high, jump to LoutOfBounds
 	cmpl %e11d, %edx                             //compare y and image->width
-	jge .LoutOfBounds                            //if y too high, jump
+	jge .LoutOfBounds                            //if y too high, jump to LoutOfBounds
 	cmpl $0, %esi                                //compare x and 0
-	jl .LoutOfBounds                             //if x too low, jump
+	jl .LoutOfBounds                             //if x too low, jump to LoutOfBounds
 	cmpl $0, %edx                                //compare y and 0
-	jl. LoutOfBounds                             //if y too low, jump
+	jl. LoutOfBounds                             //if y too low, jump to LoutOfBounds
 	movl $0, %eax                                //set return value to 0
 	jmp .Ldone
 
@@ -93,20 +93,20 @@ compute_index:
 	.globl clamp
 clamp:
 	movl %edi, %eax		// move the value to eax
-        cmpl %esi, %eax		// compare min to value
-        jge .L2			// if esi >= eax, then jump to L2
-        movl %esi, %eax		// otherwise, store min in eax
-        jmp .L4			// jump to L4
+    cmpl %esi, %eax		// compare min to value
+    jge .L2			    // if esi >= eax, then jump to L2
+    movl %esi, %eax		// otherwise, store min in eax
+    jmp .L4	    		// jump to L4
 .L2:
-        movl %edi, %eax		// move the value to eax again
-        cmpl %edx, %eax		// compare max to value
-        jle .L3			// if edx <= eax, then jump to L3
-        movl %edx, %eax		// otherwise, store max in eax
-	jmp .L4			// jump to L4
+    movl %edi, %eax		// move the value to eax again
+    cmpl %edx, %eax		// compare max to value
+    jle .L3		    	// if edx <= eax, then jump to L3
+    movl %edx, %eax		// otherwise, store max in eax
+	jmp .L4	    		// jump to L4
 .L3:
-        movl %edi, %eax		// move the value to eax to return value
+    movl %edi, %eax		// move the value to eax to return value
 .L4:
-        ret
+    ret
 
 /*
  * Returns the red part of the color, or the 8 left-most bits
@@ -119,8 +119,10 @@ clamp:
  */
 	.globl get_r
 get_r:
-	// TODO: Code goes here
-        ret
+	shrl $24, %edi
+	andl $255, %edi
+	movb %edi, %al
+	ret
 
 /*
  * Returns the green part of the color, or the 8 middle-left bits
@@ -133,8 +135,10 @@ get_r:
  */
 	.globl get_g
 get_g:
-	// TODO: Code goes here
-        ret
+	shrl 16, %edi
+	andl $255, %edi
+	movb %edi, %al
+	ret
 
 /*
  * Returns the blue part of the color, or the 8 middle-right bits
@@ -147,8 +151,10 @@ get_g:
  */
 	.globl get_b
 get_b:
-	// TODO: Code goes here
-        ret
+	shrl $24, %edi
+	andl $255, %edi
+	movb %edi, %al
+	ret
 
 /*
  * Returns the alpha part of the color, or the 8 right-most bits
@@ -161,8 +167,9 @@ get_b:
  */
 	.globl get_a
 get_a:
-	// TODO: Code goes here
-        ret
+	andl $255, %edi
+	movb %edi, %al
+	ret
 
 /*
  * Calculates the value of an individual color component in a

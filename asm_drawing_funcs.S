@@ -35,8 +35,24 @@
  */
 	.globl in_bounds
 in_bounds:
-	// TODO: Code goes here
-        ret
+	movl IMAGE_WIDTH_OFFSET(%rdi), %e10d         //store img->width in %e10d
+	movl IMAGE_HEIGHT_OFFSET(%rdi), %e11d        //store img->height in %e11d
+	cmpl %e10d, %esi                             //compare x and image->width
+	jge .LoutOfBounds                            //if x too high, jump
+	cmpl %e11d, %edx                             //compare y and image->width
+	jge .LoutOfBounds                            //if y too high, jump
+	cmpl $0, %esi                                //compare x and 0
+	jl .LoutOfBounds                             //if x too low, jump
+	cmpl $0, %edx                                //compare y and 0
+	jl. LoutOfBounds                             //if y too low, jump
+	movl $0, %eax                                //set return value to 0
+	jmp .Ldone
+
+.LoutOfBounds:
+	movl $1, %eax                                //set return value to 1
+
+.Ldone:
+    ret
 
 /*
  * Converts a pixel coordinate represented by (x,y) to an index
@@ -59,7 +75,7 @@ compute_index:
 	imull %r10d, %edx			// store (width * y) in edx
 	addl %edx, %esi				// store (width * y) + x in esi
 	movl %esi, %eax				// store total in rax
-        ret
+	ret
 
 /*
  * Constrains a value within the specified maximum and minimum
@@ -221,9 +237,9 @@ set_pixel:
  */
 	.globl square
 square:
-        imulq %rdi, %rdi
+    imulq %rdi, %rdi
 	movq %rdi, %rax
-        ret
+    ret
 
 /*
  * Find the square of the distance between two pixels.

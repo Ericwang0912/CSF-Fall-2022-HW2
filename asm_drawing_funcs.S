@@ -26,20 +26,61 @@
 
 
 /*
- * Square an int64_t.
+ * Square an int64_t value.
  *
  * Parameters:
- *   %rcx     - int64_t value
+ *   %rdi     - int64_t value
+ * 
+ * Returns (in %rax):
+ * 	the square of the parameter value
  */
 	.globl square
 square:
-        pushq %rbp
-        movq %rsp, %rbp
-        movq %rcx, -4(%rbp)
-        movq -4(%rbp), %rax
-        imulq %rax, %rax
-        popq %rbp
+        imulq %rdi, %rdi
+	movq %rdi, %rax
         ret
+
+/*
+ * Find the square of the distance between two pixels.
+ * Coordinates are int4_t values.
+ *
+ * Parameters:
+ *   %rdi     - x1
+ *   %rsi     - y1
+ *   %rdx     - x2
+ *   %rcx     - y2
+ * 
+ * Returns (in %rax):
+ * 	the square of the distance between
+ * 	the coordinates (x1, y1) and (x2, y2)
+ */
+	.globl square_dist
+square_dist:
+	// save the values of callee-saved registers
+	pushq %r12
+	pushq %r13
+	subq $8, %rsp 	 // aligns the stack pointer
+	
+	movq %rsi, %r12  // save the value of y1 in r12
+	movq %rcx, %r13  // save the value of y2 in r13
+	
+	subq %rdi, %rdx  // store x2-x1 in rdx
+	movq %rdx, %rdi  // prepare to call square
+	call square	 // store (x2-x1)^2 in rax
+	
+	subq %r12, %r13  // store y1-y2 in r13
+	movq %rax, %r12  // store (x2-x1)^2 in r12 now
+	movq %r13, %rdi  // prepare to call square
+	call square	 // store (y2-y1)^2 in rax
+	
+	addq %r12, %rax	 // store the square_dist in rax
+	
+	// restore the values of callee-saved registers
+	addq $8, %rsp 	 // restore the stack pointer
+	popq %r12
+	popq %r13
+        ret
+
 
 
 /***********************************************************************

@@ -21,18 +21,176 @@
    they can be called from the unit test code.
  ***********************************************************************/
 
-/* TODO: implement your helper functions here */
+/*
+ * Determine whether or not a specified pixel represented by (x,y) 
+ * falls within the width and height range of an image
+ * 
+ * Parameters:
+ *   %rdi - pointer to Image (dest image)
+ *   %esi - x coordinate of the pixel
+ *   %edx - y coordinate of the pixel
+ * 
+ * Returns (in %rax):
+ * 	1 if not in-bounds, 0 if in-bounds
+ */
+	.globl in_bounds
+in_bounds:
+	// TODO: Code goes here
+        ret
 
+/*
+ * Converts a pixel coordinate represented by (x,y) to an index
+ * within an array pointed to by "data" within the image struct.
+ * Does not get called if in_bounds returns 1.
+ * 
+ * Parameters:
+ *   %rdi - pointer to Image (dest image)
+ *   %esi - x coordinate of the pixel
+ *   %edx - y coordinate of the pixel
+ * 
+ * Returns (in %rax):
+ * 	the index within the array pointed to by "data"
+ * 	that would contain the same information as the
+ * 	specified (x,y) coordinate within said image
+ */
+	.globl compute_index
+compute_index:
+	// TODO: Code goes here
+        ret
 
+/*
+ * Constrains a value within the specified maximum and minimum
+ * by making the value min if it's less than minimum value and
+ * making the value max if it's more than the maximum value.
+ * 
+ * Parameters:
+ *   %rdi - value to be clamped if necessary
+ *   %esi - minimum value
+ *   %edx - maximum value
+ * 
+ * Returns (in %rax):
+ * 	the new clamped value
+ */
+	.globl clamp
+clamp:
+	// TODO: Code goes here
+        ret
+
+/*
+ * Returns the red part of the color, or the 8 left-most bits
+ * 
+ * Parameters:
+ *   %rdi - the color value with r, b, g, and alpha information
+ * 
+ * Returns (in %rax):
+ * 	the red color value
+ */
+	.globl get_r
+get_r:
+	// TODO: Code goes here
+        ret
+
+/*
+ * Returns the green part of the color, or the 8 middle-left bits
+ * 
+ * Parameters:
+ *   %rdi - the color value with r, b, g, and alpha information
+ * 
+ * Returns (in %rax):
+ * 	the green color value
+ */
+	.globl get_g
+get_g:
+	// TODO: Code goes here
+        ret
+
+/*
+ * Returns the blue part of the color, or the 8 middle-right bits
+ * 
+ * Parameters:
+ *   %rdi - the color value with r, b, g, and alpha information
+ * 
+ * Returns (in %rax):
+ * 	the blue color value
+ */
+	.globl get_b
+get_b:
+	// TODO: Code goes here
+        ret
+
+/*
+ * Returns the alpha part of the color, or the 8 right-most bits
+ * 
+ * Parameters:
+ *   %rdi - the color value with r, b, g, and alpha information
+ * 
+ * Returns (in %rax):
+ * 	the alpha value
+ */
+	.globl get_a
+get_a:
+	// TODO: Code goes here
+        ret
+
+/*
+ * Calculates the value of an individual color component in a
+ * foreground image being blended with the value of the same
+ * individual color component in a background image.
+ * 
+ * Parameters:
+ *   %esi - color component value in the foreground image
+ *   %edx - color component value in the background image
+ *   %ecx - alpha value to be used in blending calculation
+ * 
+ * Returns (in %rax):
+ * 	the component-blended value
+ */
+	.globl blend_components
+blend_components:
+	// TODO: Code goes here
+        ret
+
+/*
+ * Uses all the blended values for each color component and
+ * combines it into one wholistic color value by using the
+ * 4 8-bit color component values to make one 32-bit color.
+ * Sets alpha value to 255 for total opacity.
+ * 
+ * Parameters:
+ *   %esi - color component value in the foreground image
+ *   %edx - color component value in the background image
+ * 
+ * Returns (in %rax):
+ * 	the color-blended value
+ */
+	.globl blend_colors
+blend_colors:
+	// TODO: Code goes here
+        ret
+
+/*
+ * Modifies a pixel in the background image to represent
+ * the blended color value of the corresponding pixels in
+ * the background image and the foreground image.
+ * 
+ * Parameters:
+ *   %rdi     - pointer to struct Image
+ *   %rsi     - index in the background color array
+ *   %ecx     - uint32_t color value
+ */
+	.globl set_pixel
+set_pixel:
+	// TODO: Code goes here
+        ret
 
 /*
  * Square an int64_t value.
  *
  * Parameters:
- *   %rdi     - int64_t value
+ *   %rdi     - an int64_t value
  * 
  * Returns (in %rax):
- * 	the square of the parameter value
+ * 	the square of the value
  */
 	.globl square
 square:

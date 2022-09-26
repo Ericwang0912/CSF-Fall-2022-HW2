@@ -191,12 +191,23 @@ blend_colors:
  * 
  * Parameters:
  *   %rdi     - pointer to the struct Image
- *   %esi     - the index of the pixel to modify
- *   %ecx     - uint32_t color value
+ *   %rcx     - the index of the pixel to modify
+ *   %esi     - uint32_t color value
  */
 	.globl set_pixel
 set_pixel:
-	// TODO: Code goes here
+	subq $8, %rsp 	 // aligns the stack pointer
+	
+	/* get pointer to pixel array and put in %r10 */
+	movq IMAGE_DATA_OFFSET(%rdi), %r10
+	/* retrieve the element value and put in %edx */
+	movl (%r10,%rcx,4), %edx
+	/* color is already stored in esi, so just blend */
+	call blend_colors
+	/* move the blended color and put it back in the array*/
+	movl %eax, (%r10,%rcx,4)
+	
+	addq $8, %rsp 	 // restore the stack pointer
         ret
 
 /*

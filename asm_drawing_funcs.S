@@ -55,7 +55,10 @@ in_bounds:
  */
 	.globl compute_index
 compute_index:
-	// TODO: Code goes here
+	movq IMAGE_WIDTH_OFFSET(%rdi), %r10d	// store img->width in r10d
+	imulq %r10d, %edx			// store (width * y) in edx
+	addl %edx, %esi				// store (width * y) + x in esi
+	movq %esi, %rax				// store total in rax
         ret
 
 /*
@@ -174,8 +177,8 @@ blend_colors:
  * the background image and the foreground image.
  * 
  * Parameters:
- *   %rdi     - pointer to struct Image
- *   %rsi     - index in the background color array
+ *   %rdi     - pointer to the struct Image
+ *   %rsi     - the index of the pixel to modify
  *   %ecx     - uint32_t color value
  */
 	.globl set_pixel

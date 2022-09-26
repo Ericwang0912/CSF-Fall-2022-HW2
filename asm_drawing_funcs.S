@@ -48,17 +48,17 @@ in_bounds:
  *   %esi - x coordinate of the pixel
  *   %edx - y coordinate of the pixel
  * 
- * Returns (in %rax):
+ * Returns (in %eax):
  * 	the index within the array pointed to by "data"
  * 	that would contain the same information as the
  * 	specified (x,y) coordinate within said image
  */
 	.globl compute_index
 compute_index:
-	movq IMAGE_WIDTH_OFFSET(%rdi), %r10d	// store img->width in r10d
-	imulq %r10d, %edx			// store (width * y) in edx
+	movl IMAGE_WIDTH_OFFSET(%rdi), %r10d	// store img->width in r10d
+	imull %r10d, %edx			// store (width * y) in edx
 	addl %edx, %esi				// store (width * y) + x in esi
-	movq %esi, %rax				// store total in rax
+	movl %esi, %eax				// store total in rax
         ret
 
 /*

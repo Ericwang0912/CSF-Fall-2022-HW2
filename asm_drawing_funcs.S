@@ -30,7 +30,7 @@
  *   %esi - x coordinate of the pixel
  *   %edx - y coordinate of the pixel
  * 
- * Returns (in %rax):
+ * Returns (in %eax):
  * 	1 if not in-bounds, 0 if in-bounds
  */
 	.globl in_bounds
@@ -67,7 +67,7 @@ compute_index:
  * making the value max if it's more than the maximum value.
  * 
  * Parameters:
- *   %rdi - value to be clamped if necessary
+ *   %edi - value to be clamped if necessary
  *   %esi - minimum value
  *   %edx - maximum value
  * 
@@ -76,19 +76,19 @@ compute_index:
  */
 	.globl clamp
 clamp:
-	movl %rdi, %eax		// move the value to eax
+	movl %edi, %eax		// move the value to eax
         cmpl %esi, %eax		// compare min to value
         jge .L2			// if esi >= eax, then jump to L2
         movl %esi, %eax		// otherwise, store min in eax
         jmp .L4			// jump to L4
 .L2:
-        movl %rdi, %eax		// move the value to eax again
+        movl %edi, %eax		// move the value to eax again
         cmpl %edx, %eax		// compare max to value
         jle .L3			// if edx <= eax, then jump to L3
         movl %edx, %eax		// otherwise, store max in eax
 	jmp .L4			// jump to L4
 .L3:
-        movl %rdi, %eax		// move the value to eax to return value
+        movl %edi, %eax		// move the value to eax to return value
 .L4:
         ret
 
@@ -96,9 +96,9 @@ clamp:
  * Returns the red part of the color, or the 8 left-most bits
  * 
  * Parameters:
- *   %rdi - the color value with r, b, g, and alpha information
+ *   %edi - the color value with r, b, g, and alpha information
  * 
- * Returns (in %rax):
+ * Returns (in %al):
  * 	the red color value
  */
 	.globl get_r
@@ -110,9 +110,9 @@ get_r:
  * Returns the green part of the color, or the 8 middle-left bits
  * 
  * Parameters:
- *   %rdi - the color value with r, b, g, and alpha information
+ *   %edi - the color value with r, b, g, and alpha information
  * 
- * Returns (in %rax):
+ * Returns (in %al):
  * 	the green color value
  */
 	.globl get_g
@@ -124,9 +124,9 @@ get_g:
  * Returns the blue part of the color, or the 8 middle-right bits
  * 
  * Parameters:
- *   %rdi - the color value with r, b, g, and alpha information
+ *   %edi - the color value with r, b, g, and alpha information
  * 
- * Returns (in %rax):
+ * Returns (in %eax):
  * 	the blue color value
  */
 	.globl get_b
@@ -138,9 +138,9 @@ get_b:
  * Returns the alpha part of the color, or the 8 right-most bits
  * 
  * Parameters:
- *   %rdi - the color value with r, b, g, and alpha information
+ *   %edi - the color value with r, b, g, and alpha information
  * 
- * Returns (in %rax):
+ * Returns (in %al):
  * 	the alpha value
  */
 	.globl get_a
@@ -158,7 +158,7 @@ get_a:
  *   %edx - color component value in the background image
  *   %ecx - alpha value to be used in blending calculation
  * 
- * Returns (in %rax):
+ * Returns (in %al):
  * 	the component-blended value
  */
 	.globl blend_components
@@ -176,7 +176,7 @@ blend_components:
  *   %esi - color component value in the foreground image
  *   %edx - color component value in the background image
  * 
- * Returns (in %rax):
+ * Returns (in %eax):
  * 	the color-blended value
  */
 	.globl blend_colors
@@ -191,7 +191,7 @@ blend_colors:
  * 
  * Parameters:
  *   %rdi     - pointer to the struct Image
- *   %rsi     - the index of the pixel to modify
+ *   %esi     - the index of the pixel to modify
  *   %ecx     - uint32_t color value
  */
 	.globl set_pixel

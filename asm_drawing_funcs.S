@@ -23,6 +23,25 @@
 
 /* TODO: implement your helper functions here */
 
+
+
+/*
+ * Square an int64_t.
+ *
+ * Parameters:
+ *   %rcx     - int64_t value
+ */
+	.globl square
+square:
+        pushq %rbp
+        movq %rsp, %rbp
+        movq %rcx, -4(%rbp)
+        movq -4(%rbp), %rax
+        imulq %rax, %rax
+        popq %rbp
+        ret
+
+
 /***********************************************************************
    Public API functions
  ***********************************************************************/

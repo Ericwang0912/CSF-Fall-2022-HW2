@@ -186,8 +186,15 @@ get_a:
  */
 	.globl blend_components
 blend_components:
-	// TODO: Code goes here
-        ret
+	pushl %ecx
+	subl $255, %ecx
+	negl %ecx
+	imull %ecx, %edx
+	popl %ecx
+	imul %ecx, %esi
+	addl %esi, %edx
+	idivb $255
+    ret
 
 /*
  * Uses all the blended values for each color component and

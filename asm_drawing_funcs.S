@@ -93,20 +93,20 @@ compute_index:
 	.globl clamp
 clamp:
 	movl %edi, %eax		// move the value to eax
-    cmpl %esi, %eax		// compare min to value
-    jge .L2			    // if esi >= eax, then jump to L2
-    movl %esi, %eax		// otherwise, store min in eax
-    jmp .L4	    		// jump to L4
-.L2:
-    movl %edi, %eax		// move the value to eax again
-    cmpl %edx, %eax		// compare max to value
-    jle .L3		    	// if edx <= eax, then jump to L3
-    movl %edx, %eax		// otherwise, store max in eax
-	jmp .L4	    		// jump to L4
-.L3:
-    movl %edi, %eax		// move the value to eax to return value
-.L4:
-    ret
+    	cmpl %esi, %eax		// compare min to value
+    	jge .Lgreater		// if esi >= eax, then jump to Lgreater
+    	movl %esi, %eax		// otherwise, store min in eax
+    	jmp .Lclampend	    	// jump to Lclampend
+.Lgreater:
+   	movl %edi, %eax		// move the value to eax again
+	cmpl %edx, %eax		// compare max to value
+    	jle .Lless		// if edx <= eax, then jump to Lless
+    	movl %edx, %eax		// otherwise, store max in eax
+    	jmp .Lclampend	    	// jump to Lclampend
+.Lless:
+    	movl %edi, %eax		// move the value to eax to return value
+.Lclampend:
+    	ret
 
 /*
  * Returns the red part of the color, or the 8 left-most bits

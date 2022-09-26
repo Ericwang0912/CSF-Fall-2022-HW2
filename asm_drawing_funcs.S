@@ -186,15 +186,15 @@ get_a:
  */
 	.globl blend_components
 blend_components:
-	pushl %ecx
-	subl $255, %ecx
-	negl %ecx
-	imull %ecx, %edx
-	popl %ecx
-	imul %ecx, %esi
-	addl %esi, %edx
-	idivb $255
-    ret
+	pushl %ecx					//save the alpha value for later
+	subl $255, %ecx				//subtract 255 from alpha
+	negl %ecx					//negate (alpha-255)
+	imull %ecx, %edx			//multiply (255-alpha) by background color
+	popl %ecx					//retreive the original alpha value
+	imul %ecx, %esi				//multiply alpha by foreground color
+	addl %esi, %edx				//add (alpha*fg) to (255-alpha)*bg
+	idivb $255					//divide the result by 255 
+    ret							//return the quotient
 
 /*
  * Uses all the blended values for each color component and

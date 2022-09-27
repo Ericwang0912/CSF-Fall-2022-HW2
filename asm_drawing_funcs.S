@@ -135,7 +135,7 @@ get_r:
  */
 	.globl get_g
 get_g:
-	shrl 16, %edi
+	shrl $16, %edi
 	andl $255, %edi
 	mov %edi, %al
 	ret
@@ -151,7 +151,7 @@ get_g:
  */
 	.globl get_b
 get_b:
-	shrl $24, %edi
+	shrl $8, %edi
 	andl $255, %edi
 	mov %edi, %al
 	ret

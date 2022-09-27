@@ -35,11 +35,11 @@
  */
 	.globl in_bounds
 in_bounds:
-	movl IMAGE_WIDTH_OFFSET(%rdi), %r10d         //store img->width in %r10d
-	movl IMAGE_HEIGHT_OFFSET(%rdi), %r11d        //store img->height in %r11d
-	cmpl %r10d, %esi                             //compare x and image->width
+	movl IMAGE_WIDTH_OFFSET(%rdi), %r11d         //store img->width in %r10d
+	movl IMAGE_HEIGHT_OFFSET(%rdi), %r12d        //store img->height in %r11d
+	cmpl %r11d, %esi                             //compare x and image->width
 	jge .LoutOfBounds                            //if x too high, jump to LoutOfBounds
-	cmpl %r11d, %edx	                         //compare y and image->width
+	cmpl %r12d, %edx	                         //compare y and image->width
 	jge .LoutOfBounds                            //if y too high, jump to LoutOfBounds
 	cmpl $0, %esi                                //compare x and 0
 	jl .LoutOfBounds                             //if x too low, jump to LoutOfBounds
@@ -187,15 +187,17 @@ get_a:
 	.globl blend_components
 blend_components:
 								//(alpha*fg+(255 - alpha)*bg)/255
-	movl %ecx, %r10d			//move the alpha value into a new register
-	subl $255, %r10d			//subtract 255 from alpha
-	negl %r10d					//negate (alpha-255)
-	imull %r10d, %edx			//multiply (255-alpha) by background color
-	imull %ecx, %esi			//multiply alpha by foreground color
-	addl %esi, %edx				//add (alpha*fg) to (255-alpha)*bg
-	movl $255, %r11d			//move 255 to a register
-	idivl %r11d     			//divide the result by 255
-	movb %r11b, %al				//move result to 8-bit register
+	addl %ecx, %r11d			//copy the alpha value into r11d
+	subl $255, %r11d			//subtract 255 from alpha and store in r11d
+	negl %r11d					//negate (alpha-255) and store in r11d
+	imull %r11d, %edx			//multiply (255-alpha) by background color and store in edx
+	imull %ecx, %esi			//multiply alpha by foreground color and store in esi
+	addl %esi, %edx				//add (alpha*fg) to (255-alpha)*bg and store in edx
+	movl $255, %r12d			//move 255 to r12d
+	movl %edx, %eax				//prepare for division
+	idivl %r12d     			//divide the result by 255
+	movl %eax, %r12d			//prepare for return
+	movb %r12b, %al				//move result to 8-bit register
     ret							//return the quotient
 
 /*

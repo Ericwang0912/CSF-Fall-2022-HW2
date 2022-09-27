@@ -186,15 +186,14 @@ get_a:
  */
 	.globl blend_components
 blend_components:
-	movl %ecx					//save the alpha value for later
-	subl $255, %ecx				//subtract 255 from alpha
-	negl %ecx					//negate (alpha-255)
-	imull %ecx, %edx			//multiply (255-alpha) by background color
-	popl %ecx					//retreive the original alpha value
+	movl %ecx, %r10d			//move the alpha value into a new register
+	subl $255, %r10d			//subtract 255 from alpha
+	negl %r10d					//negate (alpha-255)
+	imull %r10d, %edx			//multiply (255-alpha) by background color
 	imul %ecx, %esi				//multiply alpha by foreground color
 	addl %esi, %edx				//add (alpha*fg) to (255-alpha)*bg
-	idivl $255, %edx				//divide the result by 255
-	movl %edx, %al					//move the final result to al
+	idivl $255, %edx			//divide the result by 255
+	movl %edx, %al				//move the final result to al
     ret							//return the quotient
 
 /*

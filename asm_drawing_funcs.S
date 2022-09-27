@@ -190,10 +190,12 @@ blend_components:
 	movl %ecx, %r11d			//copy the alpha value into r11d
 	movl $255, %r12d			//copy 255 into r12d
 	subl %r11d, %r12d			//subtract alpha from 255 and store in r12d
-	mull %r12d, %edx			//multiply (255-alpha) by background color and store in edx
-	mull %ecx, %esi				//multiply alpha by foreground color and store in esi
-	addl %esi, %edx				//add (alpha*fg) to (255-alpha)*bg and store in edx
-	movl %edx, %eax				//prepare for division
+	movl %edx, %eax				//move background color into eax
+	mull %r12d					//multiply (255-alpha) by background color and store in eax
+	movl %eax, %r12d			//move (255-alpha)*bg into r12d
+	movl %esi, %eax				//move foreground color into eax
+	mull %ecx					//multiply alpha by foreground color and store in eax
+	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
 	idivl %r12d     			//divide the result by 255
     ret							//return the quotient
 

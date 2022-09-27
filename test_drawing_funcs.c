@@ -84,11 +84,11 @@ void check_picture(struct Image *img, Picture *p) {
 
 // prototypes of test main functions
 void test_draw_pixel(TestObjs *objs);
-//void test_draw_rect(TestObjs *objs);
-//void test_draw_circle(TestObjs *objs);
-//void test_draw_circle_clip(TestObjs *objs);
-//void test_draw_tile(TestObjs *objs);
-//void test_draw_sprite(TestObjs *objs);
+void test_draw_rect(TestObjs *objs);
+void test_draw_circle(TestObjs *objs);
+void test_draw_circle_clip(TestObjs *objs);
+void test_draw_tile(TestObjs *objs);
+void test_draw_sprite(TestObjs *objs);
 // prototypes of test helper functions
 void test_in_bounds(TestObjs *objs);
 void test_compute_index(TestObjs *objs); 

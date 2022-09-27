@@ -336,15 +336,6 @@ draw_pixel:
 	ret
 
 
-
-void draw_pixel(struct Image *img, int32_t x, int32_t y, uint32_t color) {
-  if (in_bounds(img, x, y) == 1) {
-    return;
-  }
-  uint32_t index = compute_index(img, x, y);
-  set_pixel(img, index, color);
-}
-
 /*
  * Draw a rectangle.
  * The rectangle has rect->x,rect->y as its upper left corner,

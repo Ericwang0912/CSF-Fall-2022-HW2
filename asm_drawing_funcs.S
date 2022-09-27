@@ -314,7 +314,22 @@ square_dist:
  */
 	.globl draw_pixel
 draw_pixel:
-	/* TODO: implement */
+	subq $8, %rsp 	 	// aligns the stack pointer
+	
+	call in_bounds		// store in_bounds result in eax
+	cmp $1, %eax		// compare 1 to eax3
+	je .LoutOfRange		// if in_bounds is 1, jump to LoutOfRange
+	
+	call compute_index	// store compute_index in eax
+	movl %ecx, %esi		// move the color to esi
+	movl %eax, %ecx		// move compute_index to ecx
+	movzlq %ecx, %rcx	// move compute_index to rcx with zero extension
+	call set_pixel		// call set_pixel to finish off
+	jmp .LendOff		// return eventually
+.LoutOfRange:
+	nop			// do nothing
+.LendOff:
+	addq $8, %rsp 	 	// restore the stack pointer
 	ret
 
 

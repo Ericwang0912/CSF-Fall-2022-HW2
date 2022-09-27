@@ -193,8 +193,8 @@ blend_components:
 	imull %r10d, %edx			//multiply (255-alpha) by background color
 	imull %ecx, %esi			//multiply alpha by foreground color
 	addl %esi, %edx				//add (alpha*fg) to (255-alpha)*bg
-	movl $255, %r11d			//move 255 to a register
-	idivl %r11d     			//divide the result by 255
+	movl $255, %r11b			//move 255 to a register
+	idivl %r11b     			//divide the result by 255
 	movb %r11b, %al				//move result to 8-bit register
     ret							//return the quotient
 

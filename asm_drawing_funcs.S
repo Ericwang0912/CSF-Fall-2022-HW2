@@ -187,17 +187,14 @@ get_a:
 	.globl blend_components
 blend_components:
 								//(alpha*fg+(255 - alpha)*bg)/255
-	addl %ecx, %r11d			//copy the alpha value into r11d
-	subl $255, %r11d			//subtract 255 from alpha and store in r11d
-	negl %r11d					//negate (alpha-255) and store in r11d
-	imull %r11d, %edx			//multiply (255-alpha) by background color and store in edx
-	imull %ecx, %esi			//multiply alpha by foreground color and store in esi
+	movl %ecx, %r11d			//copy the alpha value into r11d
+	movl $255, %r12d			//copy 255 into r12d
+	subl %r11d, %r12d			//subtract alpha from 255 and store in r12d
+	mull %r12d, %edx			//multiply (255-alpha) by background color and store in edx
+	mull %ecx, %esi				//multiply alpha by foreground color and store in esi
 	addl %esi, %edx				//add (alpha*fg) to (255-alpha)*bg and store in edx
-	movl $255, %r12d			//move 255 to r12d
 	movl %edx, %eax				//prepare for division
 	idivl %r12d     			//divide the result by 255
-	movl %eax, %r12d			//prepare for return
-	movb %r12b, %al				//move result to 8-bit register
     ret							//return the quotient
 
 /*

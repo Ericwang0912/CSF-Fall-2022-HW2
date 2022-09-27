@@ -121,7 +121,7 @@ clamp:
 get_r:
 	shrl $24, %edi
 	andl $255, %edi
-	movl %edi, %eax
+	movb %dil, %al
 	ret
 
 /*
@@ -137,7 +137,7 @@ get_r:
 get_g:
 	shrl $16, %edi
 	andl $255, %edi
-	movl %edi, %eax
+	movb %dil, %al
 	ret
 
 /*
@@ -153,7 +153,7 @@ get_g:
 get_b:
 	shrl $8, %edi
 	andl $255, %edi
-	movl %edi, %eax
+	movb %dil, %al
 	ret
 
 /*
@@ -168,7 +168,7 @@ get_b:
 	.globl get_a
 get_a:
 	andl $255, %edi
-	movl %edi, %eax
+	movb %dil, %al
 	ret
 
 /*

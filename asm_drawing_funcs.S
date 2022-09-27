@@ -186,7 +186,7 @@ get_a:
  */
 	.globl blend_components
 blend_components:
-	pushl %ecx					//save the alpha value for later
+	movl %ecx					//save the alpha value for later
 	subl $255, %ecx				//subtract 255 from alpha
 	negl %ecx					//negate (alpha-255)
 	imull %ecx, %edx			//multiply (255-alpha) by background color

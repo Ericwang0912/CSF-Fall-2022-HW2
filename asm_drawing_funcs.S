@@ -187,7 +187,7 @@ get_a:
 	.globl blend_components
 blend_components:
 								//(alpha*fg+(255 - alpha)*bg)/255
-	addl %ecx, %r11d			//copy the alpha value into r11d
+	movl %ecx, %r11d			//copy the alpha value into r11d
 	movl $255, %r12d			//copy 255 into r12d
 	subl %r11d, %r12d			//subtract alpha from 255 and store in r12d
 	movl %edx, %eax				//move background color into eax

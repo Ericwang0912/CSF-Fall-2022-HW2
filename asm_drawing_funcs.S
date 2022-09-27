@@ -35,16 +35,16 @@
  */
 	.globl in_bounds
 in_bounds:
-	movl IMAGE_WIDTH_OFFSET(%rdi), %e10d         //store img->width in %e10d
-	movl IMAGE_HEIGHT_OFFSET(%rdi), %e11d        //store img->height in %e11d
-	cmpl %e10d, %esi                             //compare x and image->width
+	movl IMAGE_WIDTH_OFFSET(%rdi), %r10d         //store img->width in %r10d
+	movl IMAGE_HEIGHT_OFFSET(%rdi), %r11d        //store img->height in %r11d
+	cmpl %r10d, %esi                             //compare x and image->width
 	jge .LoutOfBounds                            //if x too high, jump to LoutOfBounds
-	cmpl %e11d, %edx                             //compare y and image->width
+	cmpl %r11d, %edx	                     //compare y and image->width
 	jge .LoutOfBounds                            //if y too high, jump to LoutOfBounds
 	cmpl $0, %esi                                //compare x and 0
 	jl .LoutOfBounds                             //if x too low, jump to LoutOfBounds
 	cmpl $0, %edx                                //compare y and 0
-	jl. LoutOfBounds                             //if y too low, jump to LoutOfBounds
+	jl .LoutOfBounds                             //if y too low, jump to LoutOfBounds
 	movl $0, %eax                                //set return value to 0
 	jmp .Ldone
 
@@ -121,7 +121,7 @@ clamp:
 get_r:
 	shrl $24, %edi
 	andl $255, %edi
-	movb %edi, %al
+	movl %edi, %al
 	ret
 
 /*
@@ -137,7 +137,7 @@ get_r:
 get_g:
 	shrl 16, %edi
 	andl $255, %edi
-	movb %edi, %al
+	movl %edi, %al
 	ret
 
 /*
@@ -153,7 +153,7 @@ get_g:
 get_b:
 	shrl $24, %edi
 	andl $255, %edi
-	movb %edi, %al
+	movl %edi, %al
 	ret
 
 /*
@@ -168,7 +168,7 @@ get_b:
 	.globl get_a
 get_a:
 	andl $255, %edi
-	movb %edi, %al
+	movl %edi, %al
 	ret
 
 /*
@@ -193,7 +193,8 @@ blend_components:
 	popl %ecx					//retreive the original alpha value
 	imul %ecx, %esi				//multiply alpha by foreground color
 	addl %esi, %edx				//add (alpha*fg) to (255-alpha)*bg
-	idivb $255					//divide the result by 255 
+	idivl $255, %edx				//divide the result by 255
+	movl %edx, %al					//move the final result to al
     ret							//return the quotient
 
 /*

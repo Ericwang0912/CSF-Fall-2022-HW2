@@ -327,10 +327,8 @@ draw_pixel:
 	movzlq %ecx, %rcx	// move compute_index to rcx with zero extension
 	call set_pixel		// call set_pixel to finish off
 	jmp .LendOff		// return eventually
-	
 .LoutOfRange
 	nop			// do nothing
-	
 .LendOff
 	addq $8, %rsp 	 	// restore the stack pointer
 	ret

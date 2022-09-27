@@ -323,8 +323,7 @@ draw_pixel:
 	
 	call compute_index	// store compute_index in eax
 	movl %ecx, %esi		// move the color to esi
-	movl %eax, %ecx		// move compute_index to ecx
-	movzlq %ecx, %rcx	// move compute_index to rcx with zero extension
+	movl %eax, %ecx		// move compute_index to ecx/rcx
 	call set_pixel		// call set_pixel to finish off
 	jmp .LendOff		// return eventually
 .LoutOfRange:

@@ -324,6 +324,7 @@ void test_clamp(TestObjs *objs) {
   ASSERT(clamp(1000, 10, 100) == 100);
   ASSERT(clamp(10, 10, 100) == 10);
   ASSERT(clamp(100, 10, 100) == 100);
+  ASSERT(clamp(-10, 0, 100) == 0);
 }
 
 void test_get_r(TestObjs *objs) {

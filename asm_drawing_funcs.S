@@ -198,6 +198,7 @@ blend_components:
 	mull %ecx					//multiply alpha by foreground color and store in eax
 	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
 	movl $255, %esi				//copy 255 into esi
+	movl $0, %edx
 	divl %esi	  	   			//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
     ret							//return the quotient
 

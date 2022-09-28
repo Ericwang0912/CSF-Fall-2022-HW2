@@ -255,8 +255,8 @@ set_pixel:
  */
 	.globl square
 square:
-    imulq %rdi, %rdi			multiply rdi by rdi and store in rdi
-	movq %rdi, %rax				move product to rax for return
+    imulq %rdi, %rdi			//multiply rdi by rdi and store in rdi
+	movq %rdi, %rax				//move product to rax for return
     ret
 
 /*

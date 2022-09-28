@@ -94,20 +94,20 @@ compute_index:
 	.globl clamp
 clamp:
 	movl %edi, %eax		// move the value to eax
-    	cmpl %esi, %eax		// compare min to value
-    	jge .Lgreater		// if esi >= eax, then jump to Lgreater
-    	movl %esi, %eax		// otherwise, store min in eax
-    	jmp .Lclampend	    	// jump to Lclampend
+    cmpl %esi, %eax		// compare min to value
+    jge .Lgreater		// if esi >= eax, then jump to Lgreater
+    movl %esi, %eax		// otherwise, store min in eax
+    jmp .Lclampend	    // jump to Lclampend
 .Lgreater:
    	movl %edi, %eax		// move the value to eax again
 	cmpl %edx, %eax		// compare max to value
-    	jle .Lless		// if edx <= eax, then jump to Lless
-    	movl %edx, %eax		// otherwise, store max in eax
-    	jmp .Lclampend	    	// jump to Lclampend
+    jle .Lless			// if edx <= eax, then jump to Lless
+    movl %edx, %eax		// otherwise, store max in eax
+    jmp .Lclampend	    // jump to Lclampend
 .Lless:
-    	movl %edi, %eax		// move the value to eax to return value
+    movl %edi, %eax		// move the value to eax to return value
 .Lclampend:
-    	ret
+    ret
 
 /*
  * Returns the red part of the color, or the 8 left-most bits
@@ -187,7 +187,7 @@ get_a:
  */
 	.globl blend_components
 blend_components:
-								//(alpha*fg+(255 - alpha)*bg)/255
+								//formula: (alpha*fg+(255 - alpha)*bg)/255
 	movl %ecx, %r11d			//copy the alpha value into r11d
 	movl $255, %r12d			//copy 255 into r12d
 	subl %r11d, %r12d			//subtract alpha from 255 and store in r12d
@@ -199,6 +199,8 @@ blend_components:
 	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
 	movl $255, %esi				//copy 255 into esi
 	divl %esi	  	   			//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
+	movl %eax, %edi				//prepare for return
+	movb %dil, %al				//prepare for return
     ret							//return the quotient
 
 /*

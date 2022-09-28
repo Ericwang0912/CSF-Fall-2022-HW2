@@ -199,6 +199,8 @@ blend_components:
 	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
 	movl $255, %edi				//copy 255 into esi
 	divl %edi	  	   			//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
+	movl %eax, %edx
+	movb %dl, %al
     ret							//return the quotient
 
 /*

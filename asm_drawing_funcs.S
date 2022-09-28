@@ -189,7 +189,7 @@ get_a:
 blend_components:
 								//formula: (alpha*fg+(255 - alpha)*bg)/255
 	movl %edx, %r11d			//copy the alpha value into r11d
-	movl $255, %r12d			//copy 255 into r12d
+	movl %r12d, $255			//copy 255 into r12d
 	subl %r11d, %r12d			//subtract alpha from 255 and store in r12d
 	movl %esi, %eax				//move background color into eax
 	mull %r12d					//multiply (255-alpha) by background color and store in eax
@@ -197,7 +197,7 @@ blend_components:
 	movl %edi, %eax				//move foreground color into eax
 	mull %edx					//multiply alpha by foreground color and store in eax
 	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
-	movl $255, %edi				//copy 255 into edi
+	movl %edi, $255				//copy 255 into edi
 	divl %edi	  	   			//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
     ret							//return the quotient
 

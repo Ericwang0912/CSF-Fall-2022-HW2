@@ -392,7 +392,7 @@ void test_blend_components(TestObjs *objs) {
   
   uint32_t r_val = blend_components(0, 255, 255);
   uint32_t g_val = blend_components(0, 0, 255);
-  uint32_t b_val = blend_components(get_b(blue), get_b(red), get_a(red));
+  uint32_t b_val = blend_components(128, 0, 255);
   ASSERT(r_val == 0x00);
   ASSERT(g_val == 0x00);
   ASSERT(b_val == 0x80);

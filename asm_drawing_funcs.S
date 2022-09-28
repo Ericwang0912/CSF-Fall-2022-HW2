@@ -71,11 +71,11 @@ in_bounds:
  */
 	.globl compute_index
 compute_index:
-	movl IMAGE_WIDTH_OFFSET(%rdi), %r10d	// store img->width in r10d
-	movl %edx, %eax							// store y in eax
-	mull %r10d								// store (width * y) in eax
-	addl %eax, %esi							// store (width * y) + x in esi
-	movl %esi, %eax							// store total in rax
+	movl IMAGE_WIDTH_OFFSET(%rdi), %r10d		// store img->width in r10d
+	movl %edx, %eax					// store y in eax
+	mull %r10d					// store (width * y) in eax
+	addl %eax, %esi					// store (width * y) + x in esi
+	movl %esi, %eax					// store total in rax
 	ret
 
 /*
@@ -97,13 +97,13 @@ clamp:
     cmpl %esi, %eax		// compare min to value
     jge .Lgreater		// if esi >= eax, then jump to Lgreater
     movl %esi, %eax		// otherwise, store min in eax
-    jmp .Lclampend	    // jump to Lclampend
+    jmp .Lclampend	    	// jump to Lclampend
 .Lgreater:
    	movl %edi, %eax		// move the value to eax again
 	cmpl %edx, %eax		// compare max to value
     jle .Lless			// if edx <= eax, then jump to Lless
     movl %edx, %eax		// otherwise, store max in eax
-    jmp .Lclampend	    // jump to Lclampend
+    jmp .Lclampend	    	// jump to Lclampend
 .Lless:
     movl %edi, %eax		// move the value to eax to return value
 .Lclampend:
@@ -188,7 +188,7 @@ get_a:
 	.globl blend_components
 blend_components:
 	movl %edx, %r11d			//copy the alpha value into r11d
-	mov $255, %r12d				//copy 255 into r12d
+	movl $255, %r12d			//copy 255 into r12d
 	subl %r11d, %r12d			//subtract alpha from 255 and store in r12d
 	movl %esi, %eax				//move background color into eax
 	imull %r12d, %eax			//multiply (255-alpha) by background color and store in eax
@@ -196,10 +196,10 @@ blend_components:
 	movl %edi, %eax				//move foreground color into eax
 	imull %edx, %eax			//multiply alpha by foreground color and store in eax
 	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
-	mov $255, %edi				//copy 255 into edi
-	mov $0, %edx				//prepare for division
-	divl %edi	  	   			//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
-    ret							//return the quotient
+	movl $255, %edi				//copy 255 into edi
+	movl $0, %edx				//prepare for division
+	divl %edi	  	   		//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
+	ret					//return the quotient
 
 /*
  * Uses all the blended values for each color component and
@@ -216,7 +216,28 @@ blend_components:
  */
 	.globl blend_colors
 blend_colors:
-    ret
+	// save the values of callee-saved registers
+	pushq %r12
+	pushq %r13
+	subq $8, %rsp 		 	// aligns the stack pointer
+	
+	// TODO: Blend_components section
+	
+	/* assuming that r is in r11d, g is in r12d, b is in r13d, liable to change */
+	// uint32_t final = (r << 24) + (g << 16) + (b << 8) + 255;
+	shll $24, %r11d			// shift r to the left by 24
+	shll $16, %r12d			// shift g to the left by 16
+	shll $8, %r13d			// shift b to the left by 8
+	movl $255, %eax			// prepare for addition by moving 255 to eax
+	addl %r11d, %r12d		// add r and g, store in r12d
+	addl %r12d, %r13d		// add r+g and b, store in r13d
+	addl %r13d, %eax		// add r+g+b and 255, store in eax
+	
+	// restore the values of callee-saved registers
+	addq $8, %rsp 		 	// restore the stack pointer
+	popq %r12
+	popq %r13
+	ret
 
 /*
  * Modifies a pixel in the background image to represent

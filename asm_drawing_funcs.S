@@ -72,8 +72,9 @@ in_bounds:
 	.globl compute_index
 compute_index:
 	movl IMAGE_WIDTH_OFFSET(%rdi), %r10d	// store img->width in r10d
-	mull %r10d, %edx						// store (width * y) in edx
-	addl %edx, %esi							// store (width * y) + x in esi
+	movl %edx, %eax							// store y in eax
+	mull %r10d								// store (width * y) in eax
+	addl %eax, %esi							// store (width * y) + x in esi
 	movl %esi, %eax							// store total in rax
 	ret
 

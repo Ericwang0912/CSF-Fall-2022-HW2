@@ -72,7 +72,7 @@ in_bounds:
 	.globl compute_index
 compute_index:
 	movl IMAGE_WIDTH_OFFSET(%rdi), %r10d	// store img->width in r10d
-	imull %r10d, %edx						// store (width * y) in edx
+	mull %r10d, %edx						// store (width * y) in edx
 	addl %edx, %esi							// store (width * y) + x in esi
 	movl %esi, %eax							// store total in rax
 	ret
@@ -328,7 +328,7 @@ draw_pixel:
 	call set_pixel		// call set_pixel to finish off
 	jmp .LendOff		// return eventually
 .LoutOfRange:
-	nop			// do nothing
+	nop					// do nothing
 .LendOff:
 	addq $8, %rsp 	 	// restore the stack pointer
 	ret

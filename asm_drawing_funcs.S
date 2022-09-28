@@ -192,10 +192,10 @@ blend_components:
 	mov $255, %r10d				//copy 255 into r10d
 	subl %r11d, %r10d			//subtract alpha from 255 and store in r10d
 	movl %esi, %eax				//move background color into eax
-	imull %r10d					//multiply (255-alpha) by background color and store in eax
+	imull %r10d, %eax			//multiply (255-alpha) by background color and store in eax
 	movl %eax, %r10d			//move (255-alpha)*bg into r10d
 	movl %edi, %eax				//move foreground color into eax
-	imull %edx					//multiply alpha by foreground color and store in eax
+	imull %edx, %eax			//multiply alpha by foreground color and store in eax
 	addl %r10d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
 	mov $255, %edi				//copy 255 into edi
 	divl %edi	  	   			//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax

@@ -120,9 +120,9 @@ clamp:
  */
 	.globl get_r
 get_r:
-	shrl $24, %edi
-	andl $255, %edi
-	movb %dil, %al
+	shrl $24, %edi			//move the 8 left-most bits of edi to the right
+	andl $255, %edi			//isolate the last 8 bits of edi
+	movb %dil, %al			//move last 8 bits of edi into al
 	ret
 
 /*
@@ -136,9 +136,9 @@ get_r:
  */
 	.globl get_g
 get_g:
-	shrl $16, %edi
-	andl $255, %edi
-	movb %dil, %al
+	shrl $16, %edi			//move the 8 middle-left bits of edi to the right
+	andl $255, %edi			//isolate the last 8 bits of edi
+	movb %dil, %al			//move last 8 bits of edi into al
 	ret
 
 /*
@@ -152,9 +152,9 @@ get_g:
  */
 	.globl get_b
 get_b:
-	shrl $8, %edi
-	andl $255, %edi
-	movb %dil, %al
+	shrl $8, %edi			//move the 8 middle-right bits of edi to the right
+	andl $255, %edi			//isolate the last 8 bits of edi
+	movb %dil, %al			//move last 8 bits of edi into al
 	ret
 
 /*
@@ -168,8 +168,8 @@ get_b:
  */
 	.globl get_a
 get_a:
-	andl $255, %edi
-	movb %dil, %al
+	andl $255, %edi			//isolate last 8 bits of edi
+	movb %dil, %al			//move last 8 bits of edi into al
 	ret
 
 /*
@@ -199,8 +199,6 @@ blend_components:
 	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
 	movl $255, %esi				//copy 255 into esi
 	divl %esi	  	   			//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
-	movl %eax, %edi				//prepare for return
-	movb %dil, %al				//prepare for return
     ret							//return the quotient
 
 /*
@@ -257,8 +255,8 @@ set_pixel:
  */
 	.globl square
 square:
-    imulq %rdi, %rdi
-	movq %rdi, %rax
+    imulq %rdi, %rdi			multiply rdi by rdi and store in rdi
+	movq %rdi, %rax				move product to rax for return
     ret
 
 /*
@@ -280,24 +278,24 @@ square_dist:
 	// save the values of callee-saved registers
 	pushq %r12
 	pushq %r13
-	subq $8, %rsp 	 // aligns the stack pointer
+	subq $8, %rsp 		 // aligns the stack pointer
 	
-	movq %rsi, %r12  // save the value of y1 in r12
-	movq %rcx, %r13  // save the value of y2 in r13
+	movq %rsi, %r12 	 // save the value of y1 in r12
+	movq %rcx, %r13 	 // save the value of y2 in r13
 	
-	subq %rdi, %rdx  // store x2-x1 in rdx
-	movq %rdx, %rdi  // prepare to call square
-	call square	 // store (x2-x1)^2 in rax
+	subq %rdi, %rdx 	 // store x2-x1 in rdx
+	movq %rdx, %rdi		 // prepare to call square
+	call square			 // store (x2-x1)^2 in rax
 	
-	subq %r12, %r13  // store y1-y2 in r13
-	movq %rax, %r12  // store (x2-x1)^2 in r12 now
-	movq %r13, %rdi  // prepare to call square
-	call square	 // store (y2-y1)^2 in rax
+	subq %r12, %r13 	 // store y1-y2 in r13
+	movq %rax, %r12 	 // store (x2-x1)^2 in r12 now
+	movq %r13, %rdi 	 // prepare to call square
+	call square			 // store (y2-y1)^2 in rax
 	
-	addq %r12, %rax	 // store the square_dist in rax
+	addq %r12, %rax		 // store the square_dist in rax
 	
 	// restore the values of callee-saved registers
-	addq $8, %rsp 	 // restore the stack pointer
+	addq $8, %rsp 		 // restore the stack pointer
 	popq %r12
 	popq %r13
     ret

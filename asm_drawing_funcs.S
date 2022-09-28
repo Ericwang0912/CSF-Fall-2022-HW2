@@ -178,9 +178,9 @@ get_a:
  * individual color component in a background image.
  * 
  * Parameters:
- *   %esi - color component value in the foreground image
- *   %edx - color component value in the background image
- *   %ecx - alpha value to be used in blending calculation
+ *   %edi - color component value in the foreground image
+ *   %esi - color component value in the background image
+ *   %edx - alpha value to be used in blending calculation
  * 
  * Returns (in %al):
  * 	the component-blended value
@@ -188,17 +188,17 @@ get_a:
 	.globl blend_components
 blend_components:
 								//formula: (alpha*fg+(255 - alpha)*bg)/255
-	movl %ecx, %r11d			//copy the alpha value into r11d
+	movl %edx, %r11d			//copy the alpha value into r11d
 	movl $255, %r12d			//copy 255 into r12d
 	subl %r11d, %r12d			//subtract alpha from 255 and store in r12d
-	movl %edx, %eax				//move background color into eax
+	movl %esi, %eax				//move background color into eax
 	mull %r12d					//multiply (255-alpha) by background color and store in eax
 	movl %eax, %r12d			//move (255-alpha)*bg into r12d
-	movl %esi, %eax				//move foreground color into eax
-	mull %ecx					//multiply alpha by foreground color and store in eax
+	movl %edi, %eax				//move foreground color into eax
+	mull %edx					//multiply alpha by foreground color and store in eax
 	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
-	movl $255, %esi				//copy 255 into esi
-	divl %esi	  	   			//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
+	movl $255, %edi				//copy 255 into edi
+	divl %edi	  	   			//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
     ret							//return the quotient
 
 /*

@@ -35,6 +35,8 @@
  */
 	.globl in_bounds
 in_bounds:
+	pushq %r12
+	
 	movl IMAGE_WIDTH_OFFSET(%rdi), %r11d         //store img->width in %r10d
 	movl IMAGE_HEIGHT_OFFSET(%rdi), %r12d        //store img->height in %r11d
 	cmpl %r11d, %esi                             //compare x and image->width
@@ -52,7 +54,8 @@ in_bounds:
 	movl $1, %eax                                //set return value to 1
 
 .Ldone:
-    ret
+	popq %r12
+	ret
 
 /*
  * Converts a pixel coordinate represented by (x,y) to an index
@@ -187,6 +190,8 @@ get_a:
  */
 	.globl blend_components
 blend_components:
+	pushq %r12
+	
 	movl %edx, %r11d			//copy the alpha value into r11d
 	movl $255, %r12d			//copy 255 into r12d
 	subl %r11d, %r12d			//subtract alpha from 255 and store in r12d
@@ -199,6 +204,7 @@ blend_components:
 	movl $255, %edi				//copy 255 into edi
 	movl $0, %edx				//prepare for division
 	divl %edi	  	 	  		//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
+	popq %r13
 	ret							//return the quotient
 
 /*
@@ -220,6 +226,10 @@ blend_colors:
 	pushq %rbp
 	pushq %rbx
 	pushq %r10
+	pushq %r13
+	pushq %r14
+	pushq %r15
+	subq $8, %rsp
 
 	movl %edi, %r8d			//save foreground value for later
 	movl %esi, %r9d			//save background value for later
@@ -304,6 +314,10 @@ blend_colors:
 	addl %edi, %eax			//add r and (g+b+255), store in eax
 	
 	// restore the values of callee-saved registers
+	subq $8, %rsp
+	popq %r15
+	popq %r14
+	popq %r13
 	popq %r10
 	popq %rbx
 	popq %rbp
@@ -321,15 +335,26 @@ blend_colors:
  */
 	.globl set_pixel
 set_pixel:
-	subq $8, %rsp 								// aligns the stack pointer
+	// save the values of callee-saved registers
+	pushq %r12
+	pushq %r13
+	subq $8, %rsp 					// aligns the stack pointer
 	
-	movq IMAGE_DATA_OFFSET(%rdi), %r10			//get pointer to pixel array and put in r10
-	movl (%r10,%rcx,4), %edx					//retrieve the element value and put in %edx
-	call blend_colors							//color is already stored in esi, so just blend
-	movl %eax, (%r10,%rcx,4)					//move the blended color and put it back in the array
+	movq IMAGE_DATA_OFFSET(%rdi), %r10		//get pointer to pixel array and put in r10
+	movq %r10, %r12
+	movq %rcx, %r13
 	
-	addq $8, %rsp 	 							// restore the stack pointer
-    ret
+	movl (%r12,%r13,4), %edx			//retrieve the element value and put in %edx
+	movl %esi, %edi
+	movl %edx, %esi
+	
+	call blend_colors				//color is already stored in esi, so just blend
+	movl %eax, (%r12,%r13,4)			//move the blended color and put it back in the array
+	
+	addq $8, %rsp 	 				// restore the stack pointer
+	popq %r13
+	popq %r12
+	ret
 
 /*
  * Square an int64_t value.
@@ -342,9 +367,9 @@ set_pixel:
  */
 	.globl square
 square:
-    imulq %rdi, %rdi			//multiply rdi by rdi and store in rdi
+	imulq %rdi, %rdi			//multiply rdi by rdi and store in rdi
 	movq %rdi, %rax				//move product to rax for return
-    ret
+	ret
 
 /*
  * Find the square of the distance between two pixels.

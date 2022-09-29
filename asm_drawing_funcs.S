@@ -217,25 +217,27 @@ blend_components:
 	.globl blend_colors
 blend_colors:
 	// save the values of callee-saved registers
-	pushq %r12
 	pushq %r13
-	subq $8, %rsp 		 	// aligns the stack pointer
+	pushq %r14
+	pushq %r15
+
 	
-	// TODO: Blend_components section
-	
-	/* assuming that r is in r11d, g is in r12d, b is in r13d, liable to change */
-	// uint32_t final = (r << 24) + (g << 16) + (b << 8) + 255;
-	shll $24, %r11d			// shift r to the left by 24
-	shll $16, %r12d			// shift g to the left by 16
-	shll $8, %r13d			// shift b to the left by 8
-	movl $255, %eax			// prepare for addition by moving 255 to eax
-	addl %r11d, %r12d		// add r and g, store in r12d
-	addl %r12d, %r13d		// add r+g and b, store in r13d
-	addl %r13d, %eax		// add r+g+b and 255, store in eax
+	/* assuming that r is in r13b, g is in r14b, b is in r15b*/
+	// uint32_t final = (r << 24) + (g << 16) + (b << 8) + 255
+	movzbl %r13b, %edi		//zero extension of r
+	movzbl %r14b, %esi		//zero extension of g
+	movzbl %r15b, %edx		//zero extension of b
+	shll $24, %edi			// shift r to the left by 24
+	shll $16, %esi			// shift g to the left by 16
+	shll $8, %edx			// shift b to the left by 8
+	mov $255, %eax			// prepare for addition by moving 255 to eax
+	addl %edx, %eax			//add b and 255, store in eax
+	addl %esi, %eax			//add g and (b+255), store in eax
+	addl %edi, %eax			//add r and (g+b+255), store in eax
 	
 	// restore the values of callee-saved registers
-	addq $8, %rsp 		 	// restore the stack pointer
-	popq %r12
+	popq %r15
+	popq %r14
 	popq %r13
 	ret
 

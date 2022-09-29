@@ -204,7 +204,8 @@ blend_components:
 	movl $255, %edi				//copy 255 into edi
 	movl $0, %edx				//prepare for division
 	divl %edi	  	 	  		//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
-	popq %r13
+
+	popq %r12
 	ret							//return the quotient
 
 /*

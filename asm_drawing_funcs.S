@@ -198,8 +198,8 @@ blend_components:
 	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
 	movl $255, %edi				//copy 255 into edi
 	movl $0, %edx				//prepare for division
-	divl %edi	  	   		//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
-	ret					//return the quotient
+	divl %edi	  	 	  		//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
+	ret							//return the quotient
 
 /*
  * Uses all the blended values for each color component and
@@ -208,8 +208,8 @@ blend_components:
  * Sets alpha value to 255 for total opacity.
  * 
  * Parameters:
- *   %esi - color component value in the foreground image
- *   %edx - color component value in the background image
+ *   %edi - color component value in the foreground image
+ *   %esi - color component value in the background image
  * 
  * Returns (in %eax):
  * 	the color-blended value
@@ -217,10 +217,32 @@ blend_components:
 	.globl blend_colors
 blend_colors:
 	// save the values of callee-saved registers
-	pushq %r13
-	pushq %r14
-	pushq %r15
+	pushl %ebp
+	pushl %ebx
+	pushl %r10d
 
+	movl %edi, %r8d			//save foreground value for later
+	movl %esi, %r9d			//save foreground value for later
+
+	movl %edi, %ebp			//store foreground in ebp
+	movl %esi, %ebx			//store background in ebx
+
+	call get_r				//store r component of the foreground in al
+	movzbl %al, %r10d		//store r component of the foreground in r10d
+
+	movl %ebx, %edi			//prepare to call get_r
+	call get_r				//store r component of the background in al
+	movzbl %al, %ebx		//store r component of the background in ebx
+
+	movl %ebp, %edi			//prepare to call get_a
+	call get_a				//store a component of the foreground in al
+	movzbl %al, %ebp		//store a component of the foreground in ebp
+
+	movl %r10d, %edi		//prepare to call blend_components
+	movl %ebx, %esi			//prepare to call blend_components
+	movl %ebp, %edx			//prepare to call blend_components
+	call blend_components	//store blended r value in al
+	movb %al, %r13b			//move blended r value to r13b
 	
 	/* assuming that r is in r13b, g is in r14b, b is in r15b*/
 	// uint32_t final = (r << 24) + (g << 16) + (b << 8) + 255
@@ -236,9 +258,9 @@ blend_colors:
 	addl %edi, %eax			//add r and (g+b+255), store in eax
 	
 	// restore the values of callee-saved registers
-	popq %r15
-	popq %r14
-	popq %r13
+	popl %r10d
+	popl %ebx
+	popl %ebp
 	ret
 
 /*
@@ -265,7 +287,7 @@ set_pixel:
 	movl %eax, (%r10,%rcx,4)
 	
 	addq $8, %rsp 	 // restore the stack pointer
-        ret
+    ret
 
 /*
  * Square an int64_t value.

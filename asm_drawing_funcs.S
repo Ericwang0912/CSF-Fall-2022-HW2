@@ -222,10 +222,12 @@ blend_colors:
 	pushl %r10d
 
 	movl %edi, %r8d			//save foreground value for later
-	movl %esi, %r9d			//save foreground value for later
+	movl %esi, %r9d			//save background value for later
 
+	/*dealing with get_r*/
 	movl %edi, %ebp			//store foreground in ebp
 	movl %esi, %ebx			//store background in ebx
+							//store foreground in edi
 
 	call get_r				//store r component of the foreground in al
 	movzbl %al, %r10d		//store r component of the foreground in r10d
@@ -243,6 +245,50 @@ blend_colors:
 	movl %ebp, %edx			//prepare to call blend_components
 	call blend_components	//store blended r value in al
 	movb %al, %r13b			//move blended r value to r13b
+
+	/*dealing with get_g*/
+	movl %r8d, %ebp			//store foreground in ebp
+	movl %r9d, %ebx			//store background in ebx
+	movl %r8d, %edi			//store foreground in edi
+
+	call get_g				//store g component of the foreground in al
+	movzbl %al, %r10d		//store g component of the foreground in r10d
+
+	movl %ebx, %edi			//prepare to call get_g
+	call get_g				//store g component of the background in al
+	movzbl %al, %ebx		//store g component of the background in ebx
+
+	movl %ebp, %edi			//prepare to call get_a
+	call get_a				//store a component of the foreground in al
+	movzbl %al, %ebp		//store a component of the foreground in ebp
+
+	movl %r10d, %edi		//prepare to call blend_components
+	movl %ebx, %esi			//prepare to call blend_components
+	movl %ebp, %edx			//prepare to call blend_components
+	call blend_components	//store blended g value in al
+	movb %al, %r14b			//move blended g value to r14b
+
+	/*dealing with get_b*/
+	movl %r8d, %ebp			//store foreground in ebp
+	movl %r9d, %ebx			//store background in ebx
+	movl %r8d, %edi			//store foreground in edi
+
+	call get_b				//store b component of the foreground in al
+	movzbl %al, %r10d		//store b component of the foreground in r10d
+
+	movl %ebx, %edi			//prepare to call get_b
+	call get_b				//store b component of the background in al
+	movzbl %al, %ebx		//store b component of the background in ebx
+
+	movl %ebp, %edi			//prepare to call get_a
+	call get_a				//store a component of the foreground in al
+	movzbl %al, %ebp		//store a component of the foreground in ebp
+
+	movl %r10d, %edi		//prepare to call blend_components
+	movl %ebx, %esi			//prepare to call blend_components
+	movl %ebp, %edx			//prepare to call blend_components
+	call blend_components	//store blended b value in al
+	movb %al, %r15b			//move blended b value to r15b
 	
 	/* assuming that r is in r13b, g is in r14b, b is in r15b*/
 	// uint32_t final = (r << 24) + (g << 16) + (b << 8) + 255

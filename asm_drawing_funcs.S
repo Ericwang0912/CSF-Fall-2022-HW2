@@ -340,7 +340,7 @@ blend_colors:
 set_pixel:
 	pushq %r13
 	pushq %r14
-	subq $8, %rsp 							 // aligns the stack pointer
+	subq $8, %rsp 							// aligns the stack pointer
 
 	movl IMAGE_DATA_OFFSET(%rdi), %r13d		//get pointer to data array and put in r13d
 	movl %esi, %r14d						//move index to r14d
@@ -353,8 +353,8 @@ set_pixel:
 	movl %eax, (%r13d,%r14d,4)				//move the blended color and put it back in the array
 
 	addq $8, %rsp 							// aligns the stack pointer
-	pushq %r14
-	pushq %r13
+	popq %r14
+	popq %r13
 	ret
 
 /*

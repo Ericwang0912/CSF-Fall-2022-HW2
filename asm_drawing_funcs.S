@@ -339,24 +339,24 @@ blend_colors:
 	.globl set_pixel
 set_pixel:
 	// save the values of callee-saved registers
-	pushq %r12
 	pushq %r13
+	pushq %r14
 	subq $8, %rsp 					// aligns the stack pointer
 	
 	movq IMAGE_DATA_OFFSET(%rdi), %r10		//get pointer to pixel array and put in r10
-	movq %r10, %r12
-	movq %rcx, %r13
+	movq %r10, %r13
+	movq %rcx, %r14
 	
-	movl (%r12,%r13,4), %edx			//retrieve the element value and put in %edx
+	movl (%r13,%r14,4), %edx			//retrieve the element value and put in %edx
 	movl %esi, %edi
 	movl %edx, %esi
 	
 	call blend_colors				//color is already stored in esi, so just blend
-	movl %eax, (%r12,%r13,4)			//move the blended color and put it back in the array
+	movl %eax, (%r13,%r14,4)			//move the blended color and put it back in the array
 	
 	addq $8, %rsp 	 				// restore the stack pointer
+	popq %r14
 	popq %r13
-	popq %r12
 	ret
 
 /*

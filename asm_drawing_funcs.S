@@ -220,11 +220,9 @@ blend_components:
 	.globl blend_colors
 blend_colors:
 	// save the values of callee-saved registers in the stack
-	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	subq $8, %rsp
 
 	movl %edi, %r8d			//save foreground value for later
 	movl %esi, %r9d			//save background value for later
@@ -323,11 +321,9 @@ blend_colors:
 	addl %edi, %eax			//add r and (g+b+255), store in eax
 	
 	// restore the values of callee-saved registers
-	addq $8, %rsp
 	popq %r15
 	popq %r14
 	popq %r13
-	popq %r12
 	ret
 
 /*

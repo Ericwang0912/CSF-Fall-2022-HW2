@@ -220,9 +220,11 @@ blend_components:
 	.globl blend_colors
 blend_colors:
 	// save the values of callee-saved registers in the stack
+	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
+	subq $8, %rsp
 
 	movl %edi, %r8d			//save foreground value for later
 	movl %esi, %r9d			//save background value for later
@@ -321,9 +323,11 @@ blend_colors:
 	addl %edi, %eax			//add r and (g+b+255), store in eax
 	
 	// restore the values of callee-saved registers
+	addq $8, %rsp
 	popq %r15
 	popq %r14
 	popq %r13
+	popq %r12
 	ret
 
 /*
@@ -340,19 +344,19 @@ blend_colors:
 set_pixel:
 	pushq %r13
 	pushq %r14
-	subq $8, %rsp 							// aligns the stack pointer
+	subq $8, %rsp 					// aligns the stack pointer
 
 	movl IMAGE_DATA_OFFSET(%rdi), %r13d		//get pointer to data array and put in r13d
-	movl %esi, %r14d						//move index to r14d
+	movl %esi, %r14d				//move index to r14d
 	
-	movl (%r13d,%r14d,4), %r8d				//retrieve the element value and put in %r8
-	movl %edx, %edi							//prepare color as a parameter				
-	movl %r8d, %esi							//prepare background color as a parameter
+	movl (%r13d,%r14d,4), %r8d			//retrieve the element value and put in %r8
+	movl %edx, %edi					//prepare color as a parameter				
+	movl %r8d, %esi					//prepare background color as a parameter
 	
-	call blend_colors						//store result in eax
-	movl %eax, (%r13d,%r14d,4)				//move the blended color and put it back in the array
+	call blend_colors				//store result in eax
+	movl %eax, (%r13d,%r14d,4)			//move the blended color and put it back in the array
 
-	addq $8, %rsp 							// aligns the stack pointer
+	addq $8, %rsp 					// aligns the stack pointer
 	popq %r14
 	popq %r13
 	ret
@@ -430,21 +434,42 @@ square_dist:
  */
 	.globl draw_pixel
 draw_pixel:
-	subq $8, %rsp 	 	// aligns the stack pointer
-	
+	pushq %r12
+	pushq %r13
+	pushq %r14
+	pushq %r15
+	subq $8, %rsp
+ 	// aligns the stack pointer
+
+	movl %esi, %r12d
+        movl %edx, %r13d
+	movl %ecx, %r14d
+	movq %rdi, %r15
 	call in_bounds		// store in_bounds result in eax
-	cmp $1, %eax		// compare 1 to eax3
+	cmp $1, %eax		// compare 1 to eax
 	je .LoutOfRange		// if in_bounds is 1, jump to LoutOfRange
 	
+	movl %r12d, %esi
+        movl %r13d, %edx
+	movq %r15, %rdi
+	movl %esi, %r12d
+        movl %edx, %r13d
+	movq %rdi, %r15
 	call compute_index	// store compute_index in eax
-	movl %ecx, %esi		// move the color to esi
+	movl %r14d, %esi	// move the color to esi
 	movl %eax, %ecx		// move compute_index to ecx/rcx
+	movq %r15, %rdi
 	call set_pixel		// call set_pixel to finish off
 	jmp .LendOff		// return eventually
 .LoutOfRange:
-	nop					// do nothing
+	nop			// do nothing
 .LendOff:
-	addq $8, %rsp 	 	// restore the stack pointer
+ 	// restore the stack pointer
+	addq $8, %rsp
+	popq %r15
+	popq %r14
+	popq %r13
+	popq %r12
 	ret
 
 

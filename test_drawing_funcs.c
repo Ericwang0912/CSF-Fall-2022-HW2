@@ -405,10 +405,10 @@ void test_blend_components(TestObjs *objs) {
 
   r_val = blend_components(get_r(maroon), get_r(teal), 255); //80, 00, 255 --> 128, 0, 255
   g_val = blend_components(get_g(maroon), get_g(teal), 255); //00, 80, 255 --> 0, 128, 255
-  b_val = blend_components(get_b(maroon), get_b(teal), 255); //80, 00, 255 --> 128, 0, 255
+  b_val = blend_components(get_b(maroon), get_b(teal), 255); //00, 80, 255 --> 0, 128, 255
   ASSERT(r_val == 0x80);
   ASSERT(g_val == 0x00);
-  ASSERT(b_val == 0x80);
+  ASSERT(b_val == 0x00);
 
   r_val = blend_components(get_r(olive), get_r(yellow), 255); //80, FF, 255 --> 128, 255, 255
   g_val = blend_components(get_g(olive), get_g(yellow), 255); //80, FF, 255 --> 128, 255, 255

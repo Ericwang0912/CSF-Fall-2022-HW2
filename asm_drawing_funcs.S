@@ -219,7 +219,7 @@ blend_components:
  */
 	.globl blend_colors
 blend_colors:
-	// save the values of callee-saved registers
+	// save the values of callee-saved registers in the stack
 	pushq %r13
 	pushq %r14
 	pushq %r15
@@ -228,6 +228,7 @@ blend_colors:
 	movl %esi, %r9d			//save background value for later
 
 	/*use r11, r12, and rcx to as parameters for blend_components*/
+	
 	/*get r component of the foreground*/
 	shrl $24, %r8d			//move the 8 left-most bits of foreground to the right, store in r8d
 	andl $255, %r8d			//isolate the last 8 bits of r8d, store in r8d
@@ -302,7 +303,7 @@ blend_colors:
 	movl %r12d, %esi		//prepare to call blend_components
 	movl %ecx, %edx			//prepare to call blend_components
 	call blend_components	//store blended b value in al
-	movb %al, %r14b			//move blended b value to r15b, which is callee-saved
+	movb %al, %r15b			//move blended b value to r15b, which is callee-saved
 	movl %r8d, %edi			//move foreground color back into edi
 	movl %r9d, %esi			//move background color back into esi
 	

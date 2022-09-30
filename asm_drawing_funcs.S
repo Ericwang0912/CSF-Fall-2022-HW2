@@ -190,8 +190,6 @@ get_a:
  */
 	.globl blend_components
 blend_components:
-	pushq %r12
-	
 	movl %edx, %r11d			//copy the alpha value into r11d
 	movl $255, %r12d			//copy 255 into r12d
 	subl %r11d, %r12d			//subtract alpha from 255 and store in r12d
@@ -204,8 +202,6 @@ blend_components:
 	movl $255, %edi				//copy 255 into edi
 	movl $0, %edx				//prepare for division
 	divl %edi	  	 	  		//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
-
-	popq %r12
 	ret							//return the quotient
 
 /*
@@ -235,21 +231,22 @@ blend_colors:
 	movl %edi, %r8d			//save foreground value for later
 	movl %esi, %r9d			//save background value for later
 
-	/*dealing with get_r*/
-	movl %edi, %ebp			//store foreground in ebp
-	movl %esi, %ebx			//store background in ebx
-							//store foreground in edi
+	/*get r component of the foreground*/
+	shrl $24, %r8d			//move the 8 left-most bits of fg to the right, store in r8d
+	andl $255, %r8d			//isolate the last 8 bits of r8d, store in r8d
+	movl %r8d, %r13d		//move red value in r8d into r13d
+	movl %edi, %r8d			//save foreground value for later
 
-	call get_r				//store r component of the foreground in al
-	movzbl %al, %r10d		//store r component of the foreground in r10d
+	/*get r value of the background*/
+	shrl $24, %r9d			//move the 8 left-most bits of bg to the right, store in r9d
+	andl $255, %r9d			//isolate the last 8 bits of r9d, store in r9d
+	movl %r9d, %r14d		//move red value in r9d into r14d
+	movl %esi, %r9d			//save background value for later
 
-	movl %ebx, %edi			//prepare to call get_r
-	call get_r				//store r component of the background in al
-	movzbl %al, %ebx		//store r component of the background in ebx
-
-	movl %ebp, %edi			//prepare to call get_a
-	call get_a				//store a component of the foreground in al
-	movzbl %al, %ebp		//store a component of the foreground in ebp
+	/*get a value of the foreground*/
+	andl $255, %r8d			//isolate last 8 bits of r8d, store in r8d
+	movb %r8d, %r15d		//move alpha value in r8d into r15d
+	movl %edi, %r8d			//save foreground value for later
 
 	movl %r10d, %edi		//prepare to call blend_components
 	movl %ebx, %esi			//prepare to call blend_components

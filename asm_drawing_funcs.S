@@ -189,7 +189,7 @@ get_a:
 blend_components:
 
 	subq $32, %rsp
-	
+
 								//(alpha*fg+(255 - alpha)*bg)/255
 	movl %edx, %r11d			//copy the alpha value into r11d
 	mov $255, %r12d				//copy 255 into r12d
@@ -437,26 +437,27 @@ square_dist:
  */
 	.globl draw_pixel
 draw_pixel:
-	pushq %r12
+
+	/*aligns the stack pointer*/
+	pushq %r10
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	subq $8, %rsp
- 	// aligns the stack pointer
+	subq $32, %rsp
 
-	movl %esi, %r12d
-        movl %edx, %r13d
+	movl %esi, %r10d
+    movl %edx, %r13d
 	movl %ecx, %r14d
 	movq %rdi, %r15
 	call in_bounds		// store in_bounds result in eax
 	cmp $1, %eax		// compare 1 to eax
 	je .LoutOfRange		// if in_bounds is 1, jump to LoutOfRange
 	
-	movl %r12d, %esi
-        movl %r13d, %edx
+	movl %r10d, %esi
+    movl %r13d, %edx
 	movq %r15, %rdi
-	movl %esi, %r12d
-        movl %edx, %r13d
+	movl %esi, %r10d
+    movl %edx, %r13d
 	movq %rdi, %r15
 	call compute_index	// store compute_index in eax
 	movl %r14d, %esi	// move the color to esi
@@ -465,14 +466,14 @@ draw_pixel:
 	call set_pixel		// call set_pixel to finish off
 	jmp .LendOff		// return eventually
 .LoutOfRange:
-	nop			// do nothing
+	nop					// do nothing
 .LendOff:
- 	// restore the stack pointer
-	addq $8, %rsp
+ 	/*restore the stack pointer*/
+	addq $32, %rsp
 	popq %r15
 	popq %r14
 	popq %r13
-	popq %r12
+	popq %r10
 	ret
 
 

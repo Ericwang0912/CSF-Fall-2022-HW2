@@ -333,11 +333,13 @@ void test_get_r(TestObjs *objs) {
   const uint32_t blue = 0x000080FF;                      
   const uint32_t blend = 0x7F0080FF;                 
   const uint32_t black = 0x000000FF;
+  const uint32_t maroon = 0x800000FF;
   
   ASSERT(get_r(red) == 0xFF);
   ASSERT(get_r(blue) == 0x00);
   ASSERT(get_r(blend) == 0x7F);
   ASSERT(get_r(black) == 0x00);
+  ASSERT(get_r(maroon) = 0x80);
 }
 
 void test_get_g(TestObjs *objs) {

@@ -34,27 +34,24 @@
  * 	1 if not in-bounds, 0 if in-bounds
  */
 	.globl in_bounds
-in_bounds:
-	pushq %r12
-	
-	movl IMAGE_WIDTH_OFFSET(%rdi), %r11d         //store img->width in %r10d
-	movl IMAGE_HEIGHT_OFFSET(%rdi), %r12d        //store img->height in %r11d
-	cmpl %r11d, %esi                             //compare x and image->width
-	jge .LoutOfBounds                            //if x too high, jump to LoutOfBounds
-	cmpl %r12d, %edx	                         //compare y and image->width
-	jge .LoutOfBounds                            //if y too high, jump to LoutOfBounds
-	cmpl $0, %esi                                //compare x and 0
-	jl .LoutOfBounds                             //if x too low, jump to LoutOfBounds
-	cmpl $0, %edx                                //compare y and 0
-	jl .LoutOfBounds                             //if y too low, jump to LoutOfBounds
-	movl $0, %eax                                //set return value to 0
+in_bounds:	
+	movl IMAGE_WIDTH_OFFSET(%rdi), %r11d		//store img->width in %r11d
+	movl IMAGE_HEIGHT_OFFSET(%rdi), %r12d		//store img->height in %r12d
+	cmpl %r11d, %esi                            //compare x and image->width
+	jge .LoutOfBounds                           //if x too high, jump to LoutOfBounds
+	cmpl %r12d, %edx	                        //compare y and image->width
+	jge .LoutOfBounds                           //if y too high, jump to LoutOfBounds
+	cmpl $0, %esi                               //compare x and 0
+	jl .LoutOfBounds                            //if x too low, jump to LoutOfBounds
+	cmpl $0, %edx                               //compare y and 0
+	jl .LoutOfBounds                            //if y too low, jump to LoutOfBounds
+	mov $0, %eax								//set return value to 0
 	jmp .Ldone
 
 .LoutOfBounds:
-	movl $1, %eax                                //set return value to 1
+	mov $1, %eax                                //set return value to 1
 
 .Ldone:
-	popq %r12
 	ret
 
 /*
@@ -345,7 +342,7 @@ set_pixel:
 	movl IMAGE_DATA_OFFSET(%rdi), %r13d		//get pointer to data array and put in r13d
 	movl %esi, %r14d						//move index to r14d
 	
-	movl (%r13d,%r14d,4), %r8d				//retrieve the element value and put in %r8
+	movl (%r13d,%r14d,4), %r8d				//retrieve the element value and put in %r8d
 	movl %edx, %edi							//prepare color as a parameter				
 	movl %r8d, %esi							//prepare background color as a parameter
 	
@@ -433,7 +430,7 @@ draw_pixel:
 	subq $8, %rsp 	 	// aligns the stack pointer
 	
 	call in_bounds		// store in_bounds result in eax
-	cmp $1, %eax		// compare 1 to eax3
+	cmp $1, %eax		// compare 1 to eax
 	je .LoutOfRange		// if in_bounds is 1, jump to LoutOfRange
 	
 	call compute_index	// store compute_index in eax

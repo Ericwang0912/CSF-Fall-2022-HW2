@@ -187,6 +187,9 @@ get_a:
  */
 	.globl blend_components
 blend_components:
+
+	subq $32, %rsp
+	
 								//(alpha*fg+(255 - alpha)*bg)/255
 	movl %edx, %r11d			//copy the alpha value into r11d
 	mov $255, %r12d				//copy 255 into r12d
@@ -202,6 +205,8 @@ blend_components:
 	divl %edi	  	 	 	 	//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
 	movl %eax, %edx				//store result in edx to prepare for downsizing
 	movb %dl, %al				//move result into al
+
+	addq $32, %rsp
 	ret							//return the quotient
 
 /*
@@ -223,6 +228,7 @@ blend_colors:
 	pushq %r13
 	pushq %r14
 	pushq %r15
+	subq $32, %rsp
 
 	movl %edi, %r8d			//save foreground value for later
 	movl %esi, %r9d			//save background value for later
@@ -321,6 +327,7 @@ blend_colors:
 	addl %edi, %eax			//add r and (g+b+255), store in eax
 	
 	// restore the values of callee-saved registers
+	addq $32, %rsp
 	popq %r15
 	popq %r14
 	popq %r13
@@ -340,19 +347,19 @@ blend_colors:
 set_pixel:
 	pushq %r13
 	pushq %r14
-	subq $8, %rsp 					// aligns the stack pointer
+	subq $8, %rsp 							// aligns the stack pointer
 
 	movl IMAGE_DATA_OFFSET(%rdi), %r13d		//get pointer to data array and put in r13d
-	movl %esi, %r14d				//move index to r14d
+	movl %esi, %r14d						//move index to r14d
 	
-	movl (%r13d,%r14d,4), %r8d			//retrieve the element value and put in %r8
-	movl %edx, %edi					//prepare color as a parameter				
-	movl %r8d, %esi					//prepare background color as a parameter
+	movl (%r13d,%r14d,4), %r8d				//retrieve the element value and put in %r8
+	movl %edx, %edi							//prepare color as a parameter				
+	movl %r8d, %esi							//prepare background color as a parameter
 	
-	call blend_colors				//store result in eax
-	movl %eax, (%r13d,%r14d,4)			//move the blended color and put it back in the array
+	call blend_colors						//store result in eax
+	movl %eax, (%r13d,%r14d,4)				//move the blended color and put it back in the array
 
-	addq $8, %rsp 					// aligns the stack pointer
+	addq $8, %rsp 							// aligns the stack pointer
 	popq %r14
 	popq %r13
 	ret

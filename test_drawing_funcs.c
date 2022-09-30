@@ -391,19 +391,30 @@ void test_blend_components(TestObjs *objs) {
   (void) objs;
   const uint32_t red = 0xFF0000FF;
   const uint32_t blue = 0x000080FF;
+  const uint32_t maroon = 0x800000FF;
+  const uint32_t teal = 0x008080FF;
+  const uint32_t olive = 0x808000FF;
+  const uint32_t yellow = 0xFFFF00FF;
   
-  uint32_t r_val = blend_components(0, 255, 255);
-  uint32_t g_val = blend_components(0, 0, 255);
-  uint32_t b_val = blend_components(128, 0, 255);
-  ASSERT(r_val == 0x00);
+  uint32_t r_val = blend_components(get_r(red), get_r(blue), 255); //FF, 00, 255 --> 255, 0, 255
+  uint32_t g_val = blend_components(get_g(red), get_g(blue), 255); //00, 00, 255 --> 0, 0, 255
+  uint32_t b_val = blend_components(get_b(red), get_b(blue), 255); //00, 80, 255 --> 0, 128, 255
+  ASSERT(r_val == 0xFF);
+  ASSERT(g_val == 0x00);
+  ASSERT(b_val == 0x00);
+
+  r_val = blend_components(get_r(maroon), get_r(teal), 255); //80, 00, 255 --> 128, 0, 255
+  g_val = blend_components(get_g(maroon), get_g(teal), 255); //00, 80, 255 --> 0, 128, 255
+  b_val = blend_components(get_b(maroon), get_b(teal), 255); //80, 00, 255 --> 128, 0, 255
+  ASSERT(r_val == 0x80);
   ASSERT(g_val == 0x00);
   ASSERT(b_val == 0x80);
 
-  r_val = blend_components(get_r(red), get_r(blue), get_a(red));
-  g_val = blend_components(get_g(red), get_g(blue), get_a(red));
-  b_val = blend_components(get_b(red), get_b(blue), get_a(red));
-  ASSERT(r_val == 0xFF);
-  ASSERT(g_val == 0x00);
+  r_val = blend_components(get_r(olive), get_r(yellow), 255); //80, FF, 255 --> 128, 255, 255
+  g_val = blend_components(get_g(olive), get_g(yellow), 255); //80, FF, 255 --> 128, 255, 255
+  b_val = blend_components(get_b(olive), get_b(yellow), 255); //00, 00, 255 --> 0, 0 255
+  ASSERT(r_val == 0x80);
+  ASSERT(g_val == 0x80);
   ASSERT(b_val == 0x00);
 }
 

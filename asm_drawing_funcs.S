@@ -445,24 +445,23 @@ draw_pixel:
 	pushq %r15
 	subq $32, %rsp
 
-	movl %esi, %r10d
-    movl %edx, %r13d
-	movl %ecx, %r14d
-	movq %rdi, %r15
+	movl %esi, %r10d	//store x coordinate in r10d
+    movl %edx, %r13d	//store y coordinate in r13d
+	movl %ecx, %r14d	//store color value in r14d
+	movq %rdi, %r15		//store pointer to struct Image in r15
 	call in_bounds		// store in_bounds result in eax
 	cmp $1, %eax		// compare 1 to eax
 	je .LoutOfRange		// if in_bounds is 1, jump to LoutOfRange
 	
-	movl %r10d, %esi
-    movl %r13d, %edx
-	movq %r15, %rdi
-	movl %esi, %r10d
-    movl %edx, %r13d
-	movq %rdi, %r15
+	movl %r10d, %esi	//store x coordinate in esi
+    movl %r13d, %edx	//store y coordinate in edx	
+	movq %r15, %rdi		//store pointer to struct Image in rdi
+	movl %r14d, %ecx	//store color value in ecx
+
 	call compute_index	// store compute_index in eax
-	movl %r14d, %esi	// move the color to esi
-	movl %eax, %ecx		// move compute_index to ecx/rcx
-	movq %r15, %rdi
+	movq %r15, %rdi		// move pointer to struct Image in rdi
+	movl %eax, %esi		// move compute_index to ecx
+	movl %ecx, %edx		// move color value in edx
 	call set_pixel		// call set_pixel to finish off
 	jmp .LendOff		// return eventually
 .LoutOfRange:

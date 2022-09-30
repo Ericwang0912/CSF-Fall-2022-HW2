@@ -333,28 +333,27 @@ blend_colors:
  * 
  * Parameters:
  *   %rdi     - pointer to the struct Image
- *   %rcx     - the index of the pixel to modify
- *   %esi     - uint32_t color value
+ *   %esi     - the index of the pixel to modify
+ *   %edx     - uint32_t color value
  */
 	.globl set_pixel
 set_pixel:
-	// save the values of callee-saved registers
+	/*save the values of callee-saved registers*/
 	pushq %r13
 	pushq %r14
-	subq $8, %rsp 					// aligns the stack pointer
+	subq $8, %rsp 							// aligns the stack pointer
 	
-	movq IMAGE_DATA_OFFSET(%rdi), %r10		//get pointer to pixel array and put in r10
-	movq %r10, %r13
-	movq %rcx, %r14
+	movq IMAGE_DATA_OFFSET(%rdi), %r13		//get pointer to data array and put in r13, callee-saved
+	movl %esi, %r14d						//move index to r14d, callee-saved
 	
-	movl (%r13,%r14,4), %edx			//retrieve the element value and put in %edx
-	movl %esi, %edi
-	movl %edx, %esi
+	movl (%r13,%r14,4), %r13d				//retrieve the element value and put in %r13d
+	movl %edx, %edi
+	movl %r13d, %esi
 	
-	call blend_colors				//color is already stored in esi, so just blend
-	movl %eax, (%r13,%r14,4)			//move the blended color and put it back in the array
+	call blend_colors						//color is already stored in esi, so just blend
+	movl %eax, (%r13,%r14,4)				//move the blended color and put it back in the array
 	
-	addq $8, %rsp 	 				// restore the stack pointer
+	addq $8, %rsp 							// aligns the stack pointer
 	popq %r14
 	popq %r13
 	ret

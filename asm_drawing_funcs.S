@@ -71,11 +71,11 @@ in_bounds:
  */
 	.globl compute_index
 compute_index:
-	movl IMAGE_WIDTH_OFFSET(%rdi), %r10d		// store img->width in r10d
-	movl %edx, %eax					// store y in eax
-	mull %r10d					// store (width * y) in eax
-	addl %eax, %esi					// store (width * y) + x in esi
-	movl %esi, %eax					// store total in rax
+	movl IMAGE_WIDTH_OFFSET(%rdi), %r11d		// store img->width in r11d
+	movl %edx, %eax								// store y in eax
+	mull %r11d									// store (width * y) in eax
+	addl %eax, %esi								// store (width * y) + x in esi
+	movl %esi, %eax								// store total in rax
 	ret
 
 /*
@@ -103,7 +103,7 @@ clamp:
 	cmpl %edx, %eax		// compare max to value
     jle .Lless			// if edx <= eax, then jump to Lless
     movl %edx, %eax		// otherwise, store max in eax
-    jmp .Lclampend	    	// jump to Lclampend
+    jmp .Lclampend	    // jump to Lclampend
 .Lless:
     movl %edi, %eax		// move the value to eax to return value
 .Lclampend:

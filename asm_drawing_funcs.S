@@ -245,7 +245,7 @@ blend_colors:
 
 	/*get a value of the foreground*/
 	andl $255, %r8d			//isolate last 8 bits of r8d, store in r8d
-	movb %r8d, %r15d		//move alpha value in r8d into r15d
+	movl %r8d, %r15d		//move alpha value in r8d into r15d
 	movl %edi, %r8d			//save foreground value for later
 
 	movl %r10d, %edi		//prepare to call blend_components

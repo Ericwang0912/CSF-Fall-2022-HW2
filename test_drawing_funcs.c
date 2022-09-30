@@ -424,6 +424,10 @@ void test_blend_colors(TestObjs *objs) {
   const uint32_t blue  = 0x000080FF;                      
   const uint32_t blend = 0x7F0080FF;                 
   const uint32_t black = 0x000000FF;
+  const uint32_t maroon = 0x800000FF;
+  const uint32_t teal = 0x008080FF;
+  const uint32_t olive = 0x808000FF;
+  const uint32_t yellow = 0xFFFF00FF;
   
   ASSERT(blend_colors(red, blue) == 0xFF0000FF);
   ASSERT(blend_colors(blue, red) == 0x000080FF);

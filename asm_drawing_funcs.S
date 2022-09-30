@@ -190,6 +190,7 @@ get_a:
  */
 	.globl blend_components
 blend_components:
+	pushq %r12
 	movl %edx, %r11d			//copy the alpha value into r11d
 	movl $255, %r12d			//copy 255 into r12d
 	subl %r11d, %r12d			//subtract alpha from 255 and store in r12d
@@ -201,8 +202,9 @@ blend_components:
 	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
 	movl $255, %edi				//copy 255 into edi
 	movl $0, %edx				//prepare for division
-	divl %edi	  	 	  		//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
-	ret							//return the quotient
+	divl %edi	  	 	  	//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax
+	popq %r12
+	ret					//return the quotient
 
 /*
  * Uses all the blended values for each color component and

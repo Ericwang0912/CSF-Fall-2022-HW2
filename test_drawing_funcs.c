@@ -339,7 +339,7 @@ void test_get_r(TestObjs *objs) {
   ASSERT(get_r(blue) == 0x00);
   ASSERT(get_r(blend) == 0x7F);
   ASSERT(get_r(black) == 0x00);
-  ASSERT(get_r(maroon) = 0x80);
+  ASSERT(get_r(maroon) == 0x80);
 }
 
 void test_get_g(TestObjs *objs) {

@@ -337,16 +337,24 @@ blend_colors:
  *   %edx     - uint32_t color value
  */
 	.globl set_pixel
-set_pixel:	
-	movq IMAGE_DATA_OFFSET(%rdi), %r11		//get pointer to data array and put in r11
-	movl %esi, %r12d						//move index to r12d
+set_pixel:
+	pushq %r13
+	pushq %r14
+	subq $8, %rsp 							 // aligns the stack pointer
+
+	movq IMAGE_DATA_OFFSET(%rdi), %r13		//get pointer to data array and put in r11
+	movl %esi, %r14d						//move index to r12d
 	
-	movl (%r11d,%r12d,4), %r8d				//retrieve the element value and put in %r8
+	movl (%r13d,%r14d,4), %r8d				//retrieve the element value and put in %r8
 	movl %edx, %edi							//prepare color as a parameter				
 	movl %r8d, %esi							//prepare background color as a parameter
 	
 	call blend_colors						//color is already stored in esi, so just blend
-	movl %eax, (%r11d,%r12d,4)				//move the blended color and put it back in the array
+	movl %eax, (%r13d,%r14d,4)				//move the blended color and put it back in the array
+
+	addq $8, %rsp 							// aligns the stack pointer
+	pushq %r14
+	pushq %r13
 	ret
 
 /*

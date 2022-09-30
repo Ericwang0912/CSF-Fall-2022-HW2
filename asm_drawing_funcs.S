@@ -342,14 +342,14 @@ set_pixel:
 	pushq %r14
 	subq $8, %rsp 							 // aligns the stack pointer
 
-	movq IMAGE_DATA_OFFSET(%rdi), %r13		//get pointer to data array and put in r11
-	movl %esi, %r14d						//move index to r12d
+	movl IMAGE_DATA_OFFSET(%rdi), %r13d		//get pointer to data array and put in r13d
+	movl %esi, %r14d						//move index to r14d
 	
 	movl (%r13d,%r14d,4), %r8d				//retrieve the element value and put in %r8
 	movl %edx, %edi							//prepare color as a parameter				
 	movl %r8d, %esi							//prepare background color as a parameter
 	
-	call blend_colors						//color is already stored in esi, so just blend
+	call blend_colors						//store result in eax
 	movl %eax, (%r13d,%r14d,4)				//move the blended color and put it back in the array
 
 	addq $8, %rsp 							// aligns the stack pointer

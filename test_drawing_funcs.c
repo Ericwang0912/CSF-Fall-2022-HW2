@@ -431,6 +431,8 @@ void test_blend_colors(TestObjs *objs) {
   ASSERT(blend_colors(blue, black) == 0x000080FF);
   ASSERT(blend_colors(red, blend) == 0xFF0000FF);
   ASSERT(blend_colors(blue, blend) == 0x000080FF);
+  ASSERT(blend_colors(maroon, teal) == 0x800000FF);
+  ASSERT(blend_colors(olive, yellow) == 0x808000FF);
 }
 
 void test_set_pixel(TestObjs *objs) {

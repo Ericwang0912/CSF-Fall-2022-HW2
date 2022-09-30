@@ -348,15 +348,9 @@ set_pixel:
 	movl IMAGE_DATA_OFFSET(%rdi), %r13d		//get pointer to data array and put in r13d
 	movl %esi, %r14d				//move index to r14d
 	
-<<<<<<< HEAD
-	movl (%r13d,%r14d,4), %r8d				//retrieve the element value and put in %r8d
-	movl %edx, %edi							//prepare color as a parameter				
-	movl %r8d, %esi							//prepare background color as a parameter
-=======
 	movl (%r13d,%r14d,4), %r8d			//retrieve the element value and put in %r8
 	movl %edx, %edi					//prepare color as a parameter				
 	movl %r8d, %esi					//prepare background color as a parameter
->>>>>>> 9a916d9b7c78ddce0b4f5bcfafc65f905ddf7861
 	
 	call blend_colors				//store result in eax
 	movl %eax, (%r13d,%r14d,4)			//move the blended color and put it back in the array

@@ -488,7 +488,58 @@ draw_pixel:
  */
 	.globl draw_rect
 draw_rect:
-	/* TODO: implement */
+
+	/*align the stack pointer*/
+	pushq %r12
+	pushq %r13
+	pushq %r14
+	pushq %r15
+	pushq %rbp
+
+	movl IMAGE_WIDTH(%rdi), %r12d				//move img->width in r12d
+	movl IMAGE_HEIGHT(%rdi), %r13d				//move img->height in r13d
+	movl RECT_X_OFFSET(%rsi), %r14d				//move rect->x in r14d
+	movl RECT_Y_OFFSET(%rsi), %r15d				//move rect->y in r15d
+	movq %rdi, %rbp								//move pointer to struct Image to rbp
+
+	/*prepare to call clamp*/
+	movl %r14d, %edi							//store rect->x in edi
+	movl $0, %esi								//store 0 in esi
+	movl %r12d, %edx							//store img->width in edx
+	call clamp									//call clamp
+	movl %eax, %r8d								//store min_x in r8d
+
+	/*prepare to call clamp*/
+	movl %r14d, %edi							//store rect->x in edi
+	addl RECT_WIDTH_OFFSET(%rsi), %edi			//add rect->width to rect->x and store in edi
+	movl $0, %esi								//store 0 in esi
+	movl %r12d, %edx							//store img->width in edx
+	call clamp									//call clamp
+	movl %eax, %r9d								//store max_x in r9d
+
+	/*prepare to call clamp*/
+	movl %r15d, %edi							//store rect->y in edi
+	movl $0, %esi								//store 0 in esi
+	movl %r13d, %edx							//store img->height in edx
+	call clamp									//call clamp
+	movl %eax, %r10d							//store min_y in r10d
+
+	/*prepare to call clamp*/
+	movl %r15d, %edi							//store rect->y in edi
+	addl RECT_HEIGHT_OFFSET(%rsi), %edi			//add rect->height to rect->y and store in edi
+	movl $0, %esi								//store 0 in esi
+	movl %r13d, %edx							//store img->height in edx
+	call clamp									//call clamp
+	movl %eax, %r11d							//store max_y in r11d
+
+	
+
+	/*align the stack pointer*/
+	popq %rbp
+	popq %r15
+	popq %r14
+	popq %r13
+	popq %r12
 	ret
 
 /*

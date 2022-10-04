@@ -154,7 +154,7 @@ void test_draw_pixel(TestObjs *objs) {
   draw_pixel(&objs->small, 4, 2, 0x0000FF40); // 1/4-opaque full-intensity blue
   ASSERT(objs->small.data[SMALL_IDX(4, 2)] == 0x000040FF);
 }
-/*
+
 void test_draw_rect(TestObjs *objs) {
   struct Rect red_rect = { .x = 2, .y = 2, .width=3, .height=3 };
   struct Rect blue_rect = { .x = 3, .y = 3, .width=3, .height=3 };
@@ -179,7 +179,7 @@ void test_draw_rect(TestObjs *objs) {
   check_picture(&objs->small, &expected);
 }
 
-void test_draw_circle(TestObjs *objs) {
+/*void test_draw_circle(TestObjs *objs) {
   Picture expected = {
     { {' ', 0x000000FF}, {'x', 0x00FF00FF} },
     "   x    "

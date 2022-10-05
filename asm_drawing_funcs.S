@@ -595,32 +595,32 @@ draw_circle:
 	pushq %rbp
 	subq $16, %rsp
 	
-	movl IMAGE_WIDTH(%rdi), %r12d		// move img->width in r12d
-	movl IMAGE_HEIGHT(%rdi), %r13d		// move im g->height in r13d
+	movl %esi, %r12d			// move x in r12d
+	movl %edx, %r13d			// move y in r13d
 	movl $0, %r14d				// move 0 in r14d (i)
 	movl $0, %r15d				// move 0 in r15d (j)
 	movq %rdi, %rbp				// move the Image pointer to rbp
 	
 .Lloopi
-	cmpl $r14d, %r13d			// compare r13d to i
+	cmpl $r14d, IMAGE_HEIGHT(%rbp)		// compare image height to i
 	jge .Ldone				// if greater than or equal, jump to done
 	
 .Lloopj
-	cmpl $r15d, %r12d			// compare r13d to j
+	cmpl $r15d, IMAGE_WIDTH(%rbp)		// compare image width to j
 	jge .Lloopi				// if greater than or equal, jump back to i
 	movl %ecx, %edi				// move the radius into rdi
 	call square				// call square
 	movq %rax, %r10				// move the square result into r10
 	movl %r15d, %edi			// x1 = j
-	movl %edx, %ecx				// y2 = y
-	movl %esi, %edx				// x2 = x
+	movl %r13d, %ecx			// y2 = y
+	movl %r12d, %edx			// x2 = x
 	movl %r14d, %esi			// y1 = i
 	call square_dist			// call square_dist
 	movq %rax, %r11				// move the square_dist result into r11
 	cmpq %r10, %r11				// compare square_dist to square
 	jg .Ladvance				// if greater than, then don't draw pixel
-	movl %edx, %esi				// move edx back into esi (x)
-	movl %ecx, %edx				// move edx back into ecx (y)
+	movl %r12d, %esi			// move r12d back into esi (x)
+	movl %r13d, %edx			// move r13d back into ecx (y)
 	movq %rbp, %rdi				// move the Image pointer back into rdi
 	movl %r8d, %ecx				// move the color into ecx
 	call draw_pixel				// draw the pixel

@@ -593,13 +593,16 @@ draw_circle:
 	pushq %r14
 	pushq %r15
 	pushq %rbp
-	subq $16, %rsp
+	pushq %rbx
+	subq $12, %rsp
 	
 	movl %esi, %r12d			// move x in r12d
 	movl %edx, %r13d			// move y in r13d
 	movl $0, %r14d				// move 0 in r14d (i)
 	movl $0, %r15d				// move 0 in r15d (j)
 	movq %rdi, %rbp				// move the Image pointer to rbp
+	movl %ecx, %ebx				// move the radius into rbx
+	movl %r8d, 0(%rsp)			// move the color value into rsp
 	
 .Lloopi:
 	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)	// compare image height to i
@@ -608,7 +611,7 @@ draw_circle:
 .Lloopj:
 	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)	// compare image width to j
 	jge .Lloopi				// if greater than or equal, jump back to i
-	movl %ecx, %edi				// move the radius into rdi
+	movl %ebx, %edi				// move the radius into rdi
 	call square				// call square
 	movq %rax, %r10				// move the square result into r10
 	movl %r15d, %edi			// x1 = j
@@ -622,7 +625,7 @@ draw_circle:
 	movl %r12d, %esi			// move r12d back into esi (x)
 	movl %r13d, %edx			// move r13d back into ecx (y)
 	movq %rbp, %rdi				// move the Image pointer back into rdi
-	movl %r8d, %ecx				// move the color into ecx
+	movl 0(%rsp), %ecx			// move the color into ecx
 	call draw_pixel				// draw the pixel
 	
 .Ladvance:
@@ -632,7 +635,8 @@ draw_circle:
 	
 .Lover:
 	// restore the values of callee-saved registers
-	addq $32, %rsp
+	addq $12, %rsp
+	popq %rbx
 	popq %rbp
 	popq %r15
 	popq %r14

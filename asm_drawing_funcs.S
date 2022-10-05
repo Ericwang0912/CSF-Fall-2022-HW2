@@ -587,7 +587,57 @@ draw_rect:
  */
 	.globl draw_circle
 draw_circle:
-	/* TODO: implement */
+	// align the stack pointer
+	pushq %r12
+	pushq %r13
+	pushq %r14
+	pushq %r15
+	pushq %rbp
+	subq $16, %rsp
+	
+	movl IMAGE_WIDTH(%rdi), %r12d		// move img->width in r12d
+	movl IMAGE_HEIGHT(%rdi), %r13d		// move im g->height in r13d
+	movl $0, %r14d				// move 0 in r14d (i)
+	movl $0, %r15d				// move 0 in r15d (j)
+	movq %rdi, %rbp				// move the Image pointer to rbp
+	
+.Lloopi
+	cmpl $r14d, %r13d			// compare r13d to i
+	jge .Ldone				// if greater than or equal, jump to done
+	
+.Lloopj
+	cmpl $r15d, %r12d			// compare r13d to j
+	jge .Lloopi				// if greater than or equal, jump back to i
+	movl %ecx, %edi				// move the radius into rdi
+	call square				// call square
+	movq %rax, %r10				// move the square result into r10
+	movl %r15d, %edi			// x1 = j
+	movl %edx, %ecx				// y2 = y
+	movl %esi, %edx				// x2 = x
+	movl %r14d, %esi			// y1 = i
+	call square_dist			// call square_dist
+	movq %rax, %r11				// move the square_dist result into r11
+	cmpq %r10, %r11				// compare square_dist to square
+	jg .Ladvance				// if greater than, then don't draw pixel
+	movl %edx, %esi				// move edx back into esi (x)
+	movl %ecx, %edx				// move edx back into ecx (y)
+	movq %rbp, %rdi				// move the Image pointer back into rdi
+	movl %r8d, %ecx				// move the color into ecx
+	call draw_pixel				// draw the pixel
+	
+.Ladvance
+	incl %r14d				// increment r14d
+	incl %r15d				// increment r15d
+	jmp .Lloopj				// once its done, jump back up
+	
+.Ldone
+	// restore the values of callee-saved registers
+	addq $32, %rsp
+	popq %rbp
+	popq %r15
+	popq %r14
+	popq %r13
+	popq %r12
 	ret
 
 /*

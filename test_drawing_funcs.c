@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
 
   // TEST() directives for main functions
   TEST(test_draw_pixel);
-  //TEST(test_draw_rect);
+  TEST(test_draw_rect);
   //TEST(test_draw_circle);
   //TEST(test_draw_circle_clip);
   //TEST(test_draw_tile);
@@ -179,7 +179,7 @@ void test_draw_rect(TestObjs *objs) {
   check_picture(&objs->small, &expected);
 }
 
-void test_draw_circle(TestObjs *objs) {
+/*void test_draw_circle(TestObjs *objs) {
   Picture expected = {
     { {' ', 0x000000FF}, {'x', 0x00FF00FF} },
     "   x    "
@@ -296,7 +296,7 @@ void test_draw_sprite(TestObjs *objs) {
 
   check_picture(&objs->large, &pic);
 }
-
+*/
 void test_in_bounds(TestObjs *objs) {
   ASSERT(in_bounds(&objs->small, 0, 0) == 0);
   ASSERT(in_bounds(&objs->small, -1, 0) == 1);

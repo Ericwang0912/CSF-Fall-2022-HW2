@@ -560,8 +560,7 @@ draw_rect:
 .LtopCheckOuterLoop:
 	cmpl %r12d, %r14d							//see if x position reached max_x
 	jg .LtopOuterLoopIncrement
-	jmp .Lend									//if all pixels in the image have been drawn, end function							
-
+	jmp .Lend									//if all pixels in the image have been drawn, end function
 
 .Lend:
 	/*align the stack pointer*/

@@ -495,12 +495,15 @@ draw_rect:
 	pushq %r14
 	pushq %r15
 	pushq %rbp
+	pushq %rbx
+	pushq %r10
 
 	movl IMAGE_WIDTH(%rdi), %r12d				//move img->width in r12d
 	movl IMAGE_HEIGHT(%rdi), %r13d				//move img->height in r13d
 	movl RECT_X_OFFSET(%rsi), %r14d				//move rect->x in r14d
 	movl RECT_Y_OFFSET(%rsi), %r15d				//move rect->y in r15d
 	movq %rdi, %rbp								//move pointer to struct Image to rbp
+	movl %edx, %ebx								//move color to ebx
 
 	/*prepare to call clamp*/
 	movl %r14d, %edi							//store rect->x in edi
@@ -532,9 +535,33 @@ draw_rect:
 	call clamp									//call clamp
 	movl %eax, %r11d							//store max_y in r11d
 
-	
+	movl %r8d, %r12d							//use r12d as a position for x
+	movl %r10d, %r13d							//use r13d as a position for y
+	movl %r9d, %r14d							//move max_x into r14d
+	movl %r11d, %r15d							//move max_y into r15d
 
+.LtopInnerLoop
+	movl %r10d, %r13d							//set y position to min_y
+	movq %rbp, %rdi								//prepare img for function call
+	movl %r12d, %esi							//prepare x position for function call
+	movl %r13d, %edx							//prepare y position for function call
+	movl %ebx, %ecx								//prepare color for function call
+	call draw_pixel								//call draw_pixel
+	incl %r13d									//increment y position
+	cmpl %r13d, %r15d							//see if y position reached max_y
+	jg .LtopInnerLoop							//if y position has not reached max_y, draw pixel again with higher y position
+	jmp .LtopOuterLoop							//if all pixels along the row have been drawn, go to outer loop
+
+.LtopOuterLoop
+	incl %r12d									//increment x position
+	cmpl %r12d, %r14d							//see if x position reached max_x
+	jg .LtopOuterLoop							//if x position has not reached max_x, draw new pixels in the same row
+	jmp .Lend									//if all pixels in the image have been drawn, end function
+
+.Lend
 	/*align the stack pointer*/
+	popq %r10
+	popq %rbx
 	popq %rbp
 	popq %r15
 	popq %r14

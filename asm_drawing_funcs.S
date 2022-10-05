@@ -497,6 +497,7 @@ draw_rect:
 	pushq %rbp
 	pushq %rbx
 	pushq %r10
+	subq $32, %rsp
 
 	movl IMAGE_WIDTH_OFFSET(%rdi), %r12d				//move img->width in r12d
 	movl IMAGE_HEIGHT_OFFSET(%rdi), %r13d				//move img->height in r13d
@@ -560,6 +561,7 @@ draw_rect:
 
 .Lend:
 	/*align the stack pointer*/
+	addq $32, %rsp
 	popq %r10
 	popq %rbx
 	popq %rbp

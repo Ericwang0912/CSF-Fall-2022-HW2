@@ -601,12 +601,12 @@ draw_circle:
 	movl $0, %r15d				// move 0 in r15d (j)
 	movq %rdi, %rbp				// move the Image pointer to rbp
 	
-.Lloopi
-	cmpl $r14d, IMAGE_HEIGHT(%rbp)		// compare image height to i
-	jge .Ldone				// if greater than or equal, jump to done
+.Lloopi:
+	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)	// compare image height to i
+	jge .Lover				// if greater than or equal, jump to over
 	
-.Lloopj
-	cmpl $r15d, IMAGE_WIDTH(%rbp)		// compare image width to j
+.Lloopj:
+	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)	// compare image width to j
 	jge .Lloopi				// if greater than or equal, jump back to i
 	movl %ecx, %edi				// move the radius into rdi
 	call square				// call square
@@ -625,12 +625,12 @@ draw_circle:
 	movl %r8d, %ecx				// move the color into ecx
 	call draw_pixel				// draw the pixel
 	
-.Ladvance
+.Ladvance:
 	incl %r14d				// increment r14d
 	incl %r15d				// increment r15d
 	jmp .Lloopj				// once its done, jump back up
 	
-.Ldone
+.Lover:
 	// restore the values of callee-saved registers
 	addq $32, %rsp
 	popq %rbp

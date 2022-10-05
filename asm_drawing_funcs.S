@@ -497,74 +497,65 @@ draw_rect:
 	pushq %rbp
 	pushq %rbx
 	pushq %r10
-	subq $32, %rsp
 
-	movl IMAGE_WIDTH_OFFSET(%rdi), %r12d		//move img->width in r12d
-	movl IMAGE_HEIGHT_OFFSET(%rdi), %r13d		//move img->height in r13d
-	movl RECT_X_OFFSET(%rsi), %r14d				//move rect->x in r14d
-	movl RECT_Y_OFFSET(%rsi), %r15d				//move rect->y in r15d
-	movq %rdi, %rbp								//move pointer to struct Image to rbp
-	movl %edx, %ebx								//move color to ebx
+	movq %rdi, %r12								//move img to r12
+	movq %rsi, %r13								//move rect to r13
+	movl %edx, %r14d							//move color to r14d
 
 	/*prepare to call clamp*/
-	movl %r14d, %edi							//store rect->x in edi
+	movl RECT_X_OFFSET(%r13), %edi				//store rect->x in edi
 	movl $0, %esi								//store 0 in esi
-	movl %r12d, %edx							//store img->width in edx
+	movl IMAGE_WIDTH_OFFSET(%r12), %edx			//store img->width in edx
 	call clamp									//call clamp
-	movl %eax, %r8d								//store min_x in r8d
+	movl %eax, %r15d							//store min_x in r15d
 
 	/*prepare to call clamp*/
-	movl %r14d, %edi							//store rect->x in edi
+	movl RECT_X_OFFSET(%r13), %edi				//store rect->x in edi
 	addl RECT_WIDTH_OFFSET(%rsi), %edi			//add rect->width to rect->x and store in edi
 	movl $0, %esi								//store 0 in esi
-	movl %r12d, %edx							//store img->width in edx
+	movl IMAGE_WIDTH_OFFSET(%r12), %edx			//store img->width in edx
 	call clamp									//call clamp
-	movl %eax, %r9d								//store max_x in r9d
+	movl %eax, %ebp								//store max_x in ebp
 
 	/*prepare to call clamp*/
-	movl %r15d, %edi							//store rect->y in edi
+	movl RECT_Y_OFFSET(%r13), %edi				//store rect->y in edi
 	movl $0, %esi								//store 0 in esi
-	movl %r13d, %edx							//store img->height in edx
+	movl IMAGE_HEIGHT_OFFSET(%r12), %edx		//store img->height in edx
 	call clamp									//call clamp
-	movl %eax, %r10d							//store min_y in r10d
+	movl %eax, %ebx								//store min_y in ebx
 
 	/*prepare to call clamp*/
-	movl %r15d, %edi							//store rect->y in edi
+	movl RECT_Y_OFFSET(%r13), %edi				//store rect->y in edi
 	addl RECT_HEIGHT_OFFSET(%rsi), %edi			//add rect->height to rect->y and store in edi
 	movl $0, %esi								//store 0 in esi
-	movl %r13d, %edx							//store img->height in edx
+	movl IMAGE_HEIGHT_OFFSET(%r12), %edx		//store img->height in edx
 	call clamp									//call clamp
-	movl %eax, %r11d							//store max_y in r11d
-
-	movl %r8d, %r12d							//move min_x into r12d as a position for x
-	movl %r10d, %r13d							//move min_y into r13d as a position for y
-	movl %r9d, %r14d							//move max_x into r14d
-	movl %r11d, %r15d							//move max_y into r15d
+	movl %eax, %r10d							//store max_y in r10d
+	movl %ebx, %r13d							//set y position to min_y
 
 .LtopInnerLoop:
-	movl %r10d, %r13d							//set y position to min_y
-	movq %rbp, %rdi								//prepare img for function call
-	movl %r12d, %esi							//prepare x position for function call
+	movq %r12, %rdi								//prepare img for function call
+	movl %r15d, %esi							//prepare x position for function call
 	movl %r13d, %edx							//prepare y position for function call
-	movl %ebx, %ecx								//prepare color for function call
+	movl %r14d, %ecx							//prepare color for function call
 	call draw_pixel								//call draw_pixel
 	incl %r13d									//increment y position
-	cmpl %r13d, %r15d							//see if y position reached max_y
+	cmpl %r13d, %r10d							//see if y position reached max_y
 	jg .LtopInnerLoop							//if y position has not reached max_y, draw pixel again with higher y position
 	jmp .LtopCheckOuterLoop						//if all pixels along the row have been drawn, go to outer loop
 
 .LtopOuterLoopIncrement:
-	incl %r12d									//increment x position
+	incl %r15d									//increment x position
+	movl %ebx, %r13d							//set y position to min_y
 	jmp .LtopInnerLoop							//if x position has not reached max_x, draw new pixels in the same row
 
 .LtopCheckOuterLoop:
-	cmpl %r12d, %r14d							//see if x position reached max_x
+	cmpl %r15d, %ebp							//see if x position reached max_x
 	jg .LtopOuterLoopIncrement
 	jmp .Lend									//if all pixels in the image have been drawn, end function
 
 .Lend:
 	/*align the stack pointer*/
-	addq $32, %rsp
 	popq %r10
 	popq %rbx
 	popq %rbp

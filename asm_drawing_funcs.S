@@ -540,7 +540,7 @@ draw_rect:
 	movl %r9d, %r14d							//move max_x into r14d
 	movl %r11d, %r15d							//move max_y into r15d
 
-.LtopInnerLoop
+.LtopInnerLoop:
 	movl %r10d, %r13d							//set y position to min_y
 	movq %rbp, %rdi								//prepare img for function call
 	movl %r12d, %esi							//prepare x position for function call
@@ -552,13 +552,13 @@ draw_rect:
 	jg .LtopInnerLoop							//if y position has not reached max_y, draw pixel again with higher y position
 	jmp .LtopOuterLoop							//if all pixels along the row have been drawn, go to outer loop
 
-.LtopOuterLoop
+.LtopOuterLoop:
 	incl %r12d									//increment x position
 	cmpl %r12d, %r14d							//see if x position reached max_x
 	jg .LtopOuterLoop							//if x position has not reached max_x, draw new pixels in the same row
 	jmp .Lend									//if all pixels in the image have been drawn, end function
 
-.Lend
+.Lend:
 	/*align the stack pointer*/
 	popq %r10
 	popq %rbx

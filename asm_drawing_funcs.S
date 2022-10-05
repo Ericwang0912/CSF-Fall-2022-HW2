@@ -498,8 +498,8 @@ draw_rect:
 	pushq %rbx
 	pushq %r10
 
-	movl IMAGE_WIDTH(%rdi), %r12d				//move img->width in r12d
-	movl IMAGE_HEIGHT(%rdi), %r13d				//move img->height in r13d
+	movl IMAGE_WIDTH_OFFSET(%rdi), %r12d				//move img->width in r12d
+	movl IMAGE_HEIGHT_OFFSET(%rdi), %r13d				//move img->height in r13d
 	movl RECT_X_OFFSET(%rsi), %r14d				//move rect->x in r14d
 	movl RECT_Y_OFFSET(%rsi), %r15d				//move rect->y in r15d
 	movq %rdi, %rbp								//move pointer to struct Image to rbp

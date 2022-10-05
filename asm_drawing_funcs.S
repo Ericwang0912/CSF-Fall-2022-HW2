@@ -544,14 +544,14 @@ draw_rect:
 	jg .LtopInnerLoop							//if y position has not reached max_y, draw pixel again with higher y position
 	jmp .LtopCheckOuterLoop						//if all pixels along the row have been drawn, go to outer loop
 
-.LtopOuterLoopIncrement:
-	incl %r15d									//increment x position
+.LtopOuterCallInner:
 	movl %ebx, %r13d							//set y position to min_y
 	jmp .LtopInnerLoop							//if x position has not reached max_x, draw new pixels in the same row
 
 .LtopCheckOuterLoop:
+	incl %r15d									//increment x position
 	cmpl %r15d, %ebp							//see if x position reached max_x
-	jg .LtopOuterLoopIncrement
+	jg .LtopOuterCallInner
 	jmp .Lend									//if all pixels in the image have been drawn, end function
 
 .Lend:

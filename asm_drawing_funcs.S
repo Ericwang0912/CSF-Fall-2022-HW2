@@ -238,13 +238,13 @@ blend_colors:
 	/*get r component of the foreground*/
 	shrl $24, %r8d			//move the 8 left-most bits of foreground to the right, store in r8d
 	andl $255, %r8d			//isolate the last 8 bits of r8d, store in r8d
-	movl %r8d, %r11d		//move red value in r8d into r11d
+	movl %r8d, %r10d		//move red value in r8d into r11d
 	movl %edi, %r8d			//save foreground value for later
 
 	/*get r value of the background*/
 	shrl $24, %r9d			//move the 8 left-most bits of background to the right, store in r9d
 	andl $255, %r9d			//isolate the last 8 bits of r9d, store in r9d
-	movl %r9d, %r12d		//move red value in r9d into r12d
+	movl %r9d, %r11d		//move red value in r9d into r12d
 	movl %esi, %r9d			//save background value for later
 
 	/*get a value of the foreground*/
@@ -253,8 +253,8 @@ blend_colors:
 	movl %edi, %r8d			//save foreground value for later
 
 	/*call blend_components*/
-	movl %r11d, %edi		//prepare to call blend_components
-	movl %r12d, %esi		//prepare to call blend_components
+	movl %r10d, %edi		//prepare to call blend_components
+	movl %r11d, %esi		//prepare to call blend_components
 	movl %ecx, %edx			//prepare to call blend_components
 	call blend_components	//store blended r value in al
 	movb %al, %r13b			//move blended r value to r13b, which is callee-saved
@@ -264,13 +264,13 @@ blend_colors:
 	/*get g component of the foreground*/
 	shrl $16, %r8d			//move the 8 middle-left bits of foreground to the right, store in r8d
 	andl $255, %r8d			//isolate the last 8 bits of r8d, store in r8d
-	movl %r8d, %r11d		//move green value in r8d into r11d
+	movl %r8d, %r10d		//move green value in r8d into r11d
 	movl %edi, %r8d			//save foreground value for later
 
 	/*get g value of the background*/
 	shrl $16, %r9d			//move the 8 middle-left bits of background to the right, store in r9d
 	andl $255, %r9d			//isolate the last 8 bits of r9d, store in r9d
-	movl %r9d, %r12d		//move green value in r9d into r12d
+	movl %r9d, %r11d		//move green value in r9d into r12d
 	movl %esi, %r9d			//save background value for later
 
 	/*get a value of the foreground*/
@@ -279,8 +279,8 @@ blend_colors:
 	movl %edi, %r8d			//save foreground value for later
 
 	/*call blend_components*/
-	movl %r11d, %edi		//prepare to call blend_components
-	movl %r12d, %esi		//prepare to call blend_components
+	movl %r10d, %edi		//prepare to call blend_components
+	movl %r11d, %esi		//prepare to call blend_components
 	movl %ecx, %edx			//prepare to call blend_components
 	call blend_components	//store blended g value in al
 	movb %al, %r14b			//move blended g value to r14b, which is callee-saved
@@ -290,13 +290,13 @@ blend_colors:
 	/*get b component of the foreground*/
 	shrl $8, %r8d			//move the 8 middle-right bits of foreground to the right, store in r8d
 	andl $255, %r8d			//isolate the last 8 bits of r8d, store in r8d
-	movl %r8d, %r11d		//move blue value in r8d into r11d
+	movl %r8d, %r10d		//move blue value in r8d into r11d
 	movl %edi, %r8d			//save foreground value for later
 
 	/*get b value of the background*/
 	shrl $8, %r9d			//move the 8 middle-right bits of background to the right, store in r9d
 	andl $255, %r9d			//isolate the last 8 bits of r9d, store in r9d
-	movl %r9d, %r12d		//move blue value in r9d into r12d
+	movl %r9d, %r11d		//move blue value in r9d into r12d
 	movl %esi, %r9d			//save background value for later
 
 	/*get a value of the foreground*/
@@ -305,8 +305,8 @@ blend_colors:
 	movl %edi, %r8d			//save foreground value for later
 
 	/*call blend_components*/
-	movl %r11d, %edi		//prepare to call blend_components
-	movl %r12d, %esi		//prepare to call blend_components
+	movl %r10d, %edi		//prepare to call blend_components
+	movl %r11d, %esi		//prepare to call blend_components
 	movl %ecx, %edx			//prepare to call blend_components
 	call blend_components	//store blended b value in al
 	movb %al, %r15b			//move blended b value to r15b, which is callee-saved

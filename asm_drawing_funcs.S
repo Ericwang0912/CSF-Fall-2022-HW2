@@ -493,7 +493,6 @@ draw_rect:
 	pushq %r15
 	pushq %rbp
 	pushq %rbx
-
 	subq $8, %rsp
 
 	movq %rdi, %r12								//move img to r12

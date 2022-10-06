@@ -228,7 +228,6 @@ blend_colors:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	subq $32, %rsp
 
 	movl %edi, %r8d			//save foreground value for later
 	movl %esi, %r9d			//save background value for later
@@ -327,7 +326,6 @@ blend_colors:
 	addl %edi, %eax			//add r and (g+b+255), store in eax
 	
 	// restore the values of callee-saved registers
-	addq $32, %rsp
 	popq %r15
 	popq %r14
 	popq %r13

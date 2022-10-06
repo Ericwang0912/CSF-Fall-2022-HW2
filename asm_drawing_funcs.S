@@ -439,13 +439,13 @@ square_dist:
 draw_pixel:
 
 	/*aligns the stack pointer*/
-	pushq %r12
+	pushq %rbx
 	pushq %r13
 	pushq %r14
 	pushq %r15
 	subq $8, %rsp
 
-	movl %esi, %r12d	//store x coordinate in r12d
+	movl %esi, %ebx	//store x coordinate in r12d
     movl %edx, %r13d	//store y coordinate in r13d
 	movl %ecx, %r14d	//store color value in r14d
 	movq %rdi, %r15		//store pointer to struct Image in r15
@@ -453,7 +453,7 @@ draw_pixel:
 	cmpl $1, %eax		// compare 1 to eax
 	je .LoutOfRange		// if in_bounds is 1, jump to LoutOfRange
 	
-	movl %r12d, %esi	//store x coordinate in esi
+	movl %ebx, %esi	//store x coordinate in esi
     movl %r13d, %edx	//store y coordinate in edx	
 	movq %r15, %rdi		//store pointer to struct Image in rdi
 	movl %r14d, %ecx	//store color value in ecx
@@ -473,7 +473,7 @@ draw_pixel:
 	popq %r15
 	popq %r14
 	popq %r13
-	popq %r12
+	popq %rbx
 	ret
 
 

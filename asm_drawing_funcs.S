@@ -359,6 +359,7 @@ set_pixel:
 	call blend_colors						//store result in eax
 	movl %eax, (%r13d,%r14d,4)				//move the blended color and put it back in the array
 
+	movl $0, %eax
 	addq $8, %rsp 							// aligns the stack pointer
 	popq %r14
 	popq %r13
@@ -450,7 +451,7 @@ draw_pixel:
 	movl %ecx, %r14d	//store color value in r14d
 	movq %rdi, %r15		//store pointer to struct Image in r15
 	call in_bounds		// store in_bounds result in eax
-	cmp $1, %eax		// compare 1 to eax
+	cmpl $1, %eax		// compare 1 to eax
 	je .LoutOfRange		// if in_bounds is 1, jump to LoutOfRange
 	
 	movl %r12d, %esi	//store x coordinate in esi
@@ -468,6 +469,7 @@ draw_pixel:
 	nop					// do nothing
 .LendOff:
  	/*restore the stack pointer*/
+	movl $0, %eax
 	addq $8, %rsp
 	popq %r15
 	popq %r14

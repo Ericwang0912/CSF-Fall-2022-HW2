@@ -231,8 +231,8 @@ blend_colors:
 	pushq %rbx
 	pushq %rbp
 
-	movl %edi, %ebx			//save foreground value for later
-	movl %esi, %ebp			//save background value for later
+	movl %edi, %ebx			//save foreground value in ebx
+	movl %esi, %ebp			//save background value in ebp
 
 	/*use r10, r11, and rcx to as parameters for blend_components*/
 	
@@ -284,7 +284,7 @@ blend_colors:
 	movl %r11d, %esi		//prepare to call blend_components
 	movl %ecx, %edx			//prepare to call blend_components
 	call blend_components	//store blended g value in al
-	movb %al, %r13b			//move blended g value to r14b, which is callee-saved
+	movb %al, %r13b			//move blended g value to r13b, which is callee-saved
 	movl %ebx, %edi			//move foreground color back into edi
 	movl %ebp, %esi			//move background color back into esi
 
@@ -310,7 +310,7 @@ blend_colors:
 	movl %r11d, %esi		//prepare to call blend_components
 	movl %ecx, %edx			//prepare to call blend_components
 	call blend_components	//store blended b value in al
-	movb %al, %r14b			//move blended b value to r15b, which is callee-saved
+	movb %al, %r14b			//move blended b value to r14b, which is callee-saved
 	
 	/* assuming that r is in r12b, g is in r13b, b is in r14b*/
 	/* uint32_t final = (r << 24) + (g << 16) + (b << 8) + 255*/
@@ -325,7 +325,7 @@ blend_colors:
 	addl %esi, %eax			//add g and (b+255), store in eax
 	addl %edi, %eax			//add r and (g+b+255), store in eax
 	
-	// restore the values of callee-saved registers
+	/*restore the values of callee-saved registers*/
 	popq %rbp
 	popq %rbx
 	popq %r14

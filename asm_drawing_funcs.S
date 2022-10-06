@@ -512,7 +512,7 @@ draw_rect:
 
 	/*prepare to call clamp*/
 	movl RECT_X_OFFSET(%r13), %edi				//store rect->x in edi
-	addl RECT_WIDTH_OFFSET(%rsi), %edi			//add rect->width to rect->x and store in edi
+	addl RECT_WIDTH_OFFSET(%r13), %edi			//add rect->width to rect->x and store in edi
 	movl $0, %esi								//store 0 in esi
 	movl IMAGE_WIDTH_OFFSET(%r12), %edx			//store img->width in edx
 	call clamp									//call clamp
@@ -527,7 +527,7 @@ draw_rect:
 
 	/*prepare to call clamp*/
 	movl RECT_Y_OFFSET(%r13), %edi				//store rect->y in edi
-	addl RECT_HEIGHT_OFFSET(%rsi), %edi			//add rect->height to rect->y and store in edi
+	addl RECT_HEIGHT_OFFSET(%r13), %edi			//add rect->height to rect->y and store in edi
 	movl $0, %esi								//store 0 in esi
 	movl IMAGE_HEIGHT_OFFSET(%r12), %edx		//store img->height in edx
 	call clamp									//call clamp

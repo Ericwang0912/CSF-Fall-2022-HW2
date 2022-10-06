@@ -188,15 +188,15 @@ get_a:
 	.globl blend_components
 blend_components:
 								//(alpha*fg+(255 - alpha)*bg)/255
-	movl %edx, %r11d			//copy the alpha value into r11d
-	mov $255, %r12d				//copy 255 into r12d
-	subl %r11d, %r12d			//(255-alpha), store in r12d
+	movl %edx, %r10d			//copy the alpha value into r10d
+	mov $255, %r11d				//copy 255 into r11d
+	subl %r10d, %r11d			//(255-alpha), store in r11d
 	movl %esi, %eax				//move background color into eax
-	imull %r12d, %eax			//multiply (255-alpha) by background color and store in eax
-	movl %eax, %r12d			//move (255-alpha)*bg into r12d
+	imull %r11d, %eax			//multiply (255-alpha) by background color and store in eax
+	movl %eax, %r11d			//move (255-alpha)*bg into r11d
 	movl %edi, %eax				//move foreground color into eax
 	imull %edx, %eax			//multiply alpha by foreground color and store in eax
-	addl %r12d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
+	addl %r11d, %eax			//add (255-alpha)*bg to (alpha*fg) and store in eax
 	mov $255, %edi				//copy 255 into edi
 	movl $0, %edx				//prepare for division
 	divl %edi	  	 	 	 	//divide alpha*fg+(255 - alpha)*bg by 255 and store in eax

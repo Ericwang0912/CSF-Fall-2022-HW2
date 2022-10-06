@@ -327,7 +327,7 @@ blend_colors:
 	
 	/*restore the values of callee-saved registers*/
 	popq %rbp
-	popq %rbx
+	popq %r15
 	popq %r14
 	popq %r13
 	popq %r12

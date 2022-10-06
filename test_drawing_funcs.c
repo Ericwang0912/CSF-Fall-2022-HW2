@@ -114,9 +114,9 @@ int main(int argc, char **argv) {
 
   // TEST() directives for main functions
   TEST(test_draw_pixel);
-  TEST(test_draw_rect);
-  TEST(test_draw_circle);
-  TEST(test_draw_circle_clip);
+  //TEST(test_draw_rect);
+  //TEST(test_draw_circle);
+  //TEST(test_draw_circle_clip);
   //TEST(test_draw_tile);
   //TEST(test_draw_sprite);
   // TEST() directives for helper functions

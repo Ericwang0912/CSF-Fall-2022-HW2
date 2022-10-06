@@ -345,23 +345,23 @@ blend_colors:
  */
 	.globl set_pixel
 set_pixel:
+	pushq %r12
 	pushq %r13
-	pushq %r14
 	subq $8, %rsp 							// aligns the stack pointer
 
-	movl IMAGE_DATA_OFFSET(%rdi), %r13d		//get pointer to data array and put in r13d
-	movl %esi, %r14d						//move index to r14d
+	movl IMAGE_DATA_OFFSET(%rdi), %r12d		//get pointer to data array and put in r13d
+	movl %esi, %r13d						//move index to r14d
 	
-	movl (%r13d,%r14d,4), %esi				//prepare background color as a parameter
+	movl (%r12d,%r13d,4), %esi				//prepare background color as a parameter
 	movl %edx, %edi							//prepare color as a parameter				
 	
 	call blend_colors						//store result in eax
-	movl %eax, (%r13d,%r14d,4)				//move the blended color and put it back in the array
+	movl %eax, (%r12d,%r13d,4)				//move the blended color and put it back in the array
 
 	movl $0, %eax
 	addq $8, %rsp 							// aligns the stack pointer
-	popq %r14
 	popq %r13
+	popq %r12
 	ret
 
 /*

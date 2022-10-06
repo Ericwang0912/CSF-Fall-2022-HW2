@@ -187,9 +187,6 @@ get_a:
  */
 	.globl blend_components
 blend_components:
-
-	subq $32, %rsp
-
 								//(alpha*fg+(255 - alpha)*bg)/255
 	movl %edx, %r11d			//copy the alpha value into r11d
 	mov $255, %r12d				//copy 255 into r12d
@@ -206,7 +203,6 @@ blend_components:
 	movl %eax, %edx				//store result in edx to prepare for downsizing
 	movb %dl, %al				//move result into al
 
-	addq $32, %rsp
 	ret							//return the quotient
 
 /*

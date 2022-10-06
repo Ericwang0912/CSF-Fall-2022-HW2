@@ -35,11 +35,11 @@
  */
 	.globl in_bounds
 in_bounds:	
-	movl IMAGE_WIDTH_OFFSET(%rdi), %r11d		//store img->width in %r11d
-	movl IMAGE_HEIGHT_OFFSET(%rdi), %r12d		//store img->height in %r12d
-	cmpl %r11d, %esi                            //compare x and image->width
+	movl IMAGE_WIDTH_OFFSET(%rdi), %r10d		//store img->width in %r10d
+	movl IMAGE_HEIGHT_OFFSET(%rdi), %r11d		//store img->height in %r11d
+	cmpl %r10d, %esi                            //compare x and image->width
 	jge .LoutOfBounds                           //if x too high, jump to LoutOfBounds
-	cmpl %r12d, %edx	                        //compare y and image->width
+	cmpl %r11d, %edx	                        //compare y and image->width
 	jge .LoutOfBounds                           //if y too high, jump to LoutOfBounds
 	cmpl $0, %esi                               //compare x and 0
 	jl .LoutOfBounds                            //if x too low, jump to LoutOfBounds
@@ -71,9 +71,9 @@ in_bounds:
  */
 	.globl compute_index
 compute_index:
-	movl IMAGE_WIDTH_OFFSET(%rdi), %r11d		// store img->width in r11d
+	movl IMAGE_WIDTH_OFFSET(%rdi), %r10d		// store img->width in r10d
 	movl %edx, %eax								// store y in eax
-	mull %r11d									// store (width * y) in eax
+	mull %r10d									// store (width * y) in eax
 	addl %eax, %esi								// store (width * y) + x in esi
 	movl %esi, %eax								// store total in rax
 	ret
@@ -435,13 +435,13 @@ square_dist:
 draw_pixel:
 
 	/*aligns the stack pointer*/
-	pushq %rbx
+	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
 	subq $8, %rsp
 
-	movl %esi, %ebx	//store x coordinate in r12d
+	movl %esi, %r12d	//store x coordinate in r12d
     movl %edx, %r13d	//store y coordinate in r13d
 	movl %ecx, %r14d	//store color value in r14d
 	movq %rdi, %r15		//store pointer to struct Image in r15
@@ -449,7 +449,7 @@ draw_pixel:
 	cmpl $1, %eax		// compare 1 to eax
 	je .LoutOfRange		// if in_bounds is 1, jump to LoutOfRange
 	
-	movl %ebx, %esi	//store x coordinate in esi
+	movl %r12d, %esi	//store x coordinate in esi
     movl %r13d, %edx	//store y coordinate in edx	
 	movq %r15, %rdi		//store pointer to struct Image in rdi
 	movl %r14d, %ecx	//store color value in ecx
@@ -469,7 +469,7 @@ draw_pixel:
 	popq %r15
 	popq %r14
 	popq %r13
-	popq %rbx
+	popq %r12
 	ret
 
 

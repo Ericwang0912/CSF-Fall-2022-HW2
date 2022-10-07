@@ -589,7 +589,7 @@ draw_circle:
 	movl $0, %r14d							// move 0 in r14d (i)
 	movl $0, %r15d							// move 0 in r15d (j)
 	movq %rdi, %rbp							// move the Image pointer to rbp
-	movl %ecx, %rdi							// move the radius into rdi
+	movzlq %ecx, %rdi						// move the radius into rdi
 	call square								// call square
 	movq %rax, %rbx							// move radius^2 into rbx
 	movl %r8d, 0(%rsp)						// move the color value into rsp

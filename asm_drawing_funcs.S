@@ -589,31 +589,30 @@ draw_circle:
 	movl $0, %r14d							// move 0 in r14d (i)
 	movl $0, %r15d							// move 0 in r15d (j)
 	movq %rdi, %rbp							// move the Image pointer to rbp
-	movl %ecx, %ebx							// move the radius into rbx
 	movl %ebx, %edi							// move the radius into rdi
 	call square								// call square
-	movq %rax, %rbx							// move radius^2 into ebx
+	movq %rax, %rbx							// move radius^2 into rbx
 	movl %r8d, 0(%rsp)						// move the color value into rsp
 	
 .Lloopj:
-	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)
-	jle .LtopChecki							//if y position has not reached max_y, draw pixel again with higher y position
 	movl %r15d, %edi						// x1 = j
-	movl %r13d, %ecx						// y2 = y
-	movl %r12d, %edx						// x2 = x
 	movl %r14d, %esi						// y1 = i
+	movl %r12d, %edx						// x2 = x
+	movl %r13d, %ecx						// y2 = y
 	call square_dist						// call square_dist
-	movq %rax, %r11							// move the square_dist result into r11
-	cmpq %rbx, %r11							// compare square_dist to square
-	jg .Ladvance							// if square dist is greater than square, then don't draw pixel
+	cmpq %rax, %rbx							// compare square_dist to square
+	jl .Ladvancej							// if square dist is greater than square, then don't draw pixel
+	movq %rbp, %rdi							// move the Image pointer back into rdi	
 	movl %r12d, %esi						// move r12d back into esi (x)
 	movl %r13d, %edx						// move r13d back into ecx (y)
-	movq %rbp, %rdi							// move the Image pointer back into rdi
 	movl 0(%rsp), %ecx						// move the color into ecx
 	call draw_pixel							// draw the pixel
-	jmp .Ladvance
+	incl %r15d								//increment j
+	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)	//compare j and image width
+	jg .Lloopj								//if y position has not reached max_y, draw pixel again with higher y position
+	jmp .LtopCheci							//if all pixels along the row have been drawn, go to outer loop
 
-.Ladvance:
+.Ladvancej:
 	incl %r15d
 	jmp .Lloopj
 

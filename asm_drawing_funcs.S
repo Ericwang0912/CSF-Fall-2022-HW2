@@ -624,7 +624,7 @@ draw_circle:
 .LtopChecki:
 	incl %r14d									//increment i position
 	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)		//see if x position reached max_x
-	jg .Ltopcallj
+	jg .Ltopicallj
 	jmp .Lover									//if all pixels in the image have been drawn, end function
 	
 .Lover:

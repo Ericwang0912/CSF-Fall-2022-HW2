@@ -609,7 +609,7 @@ draw_circle:
 	call draw_pixel							// draw the pixel
 	incl %r15d								//increment j
 	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)	//compare j and image width
-	jg .Lloopj								//if y position has not reached max_y, draw pixel again with higher y position
+	jg .Lloopj								//if j has not yet reached img->height, draw pixel again with higher y position
 	jmp .LtopChecki							//if all pixels along the row have been drawn, go to outer loop
 
 .Ladvancej:
@@ -618,12 +618,12 @@ draw_circle:
 
 .Ltopicallj:
 	movl $0, %r15d								//set j position to 0
-	jmp .Lloopj									//if i has not reached img->height, draw new pixels in the same row
+	jmp .Lloopj									//draw pixels along new row
 
 .LtopChecki:
 	incl %r14d									//increment i position
 	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)		//see if x position reached max_x
-	jg .Ltopicallj
+	jg .Ltopicallj								//increment j if i is within bounds
 	jmp .Lover									//if all pixels in the image have been drawn, end function
 	
 .Lover:

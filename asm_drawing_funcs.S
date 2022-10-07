@@ -493,7 +493,7 @@ draw_rect:
 	pushq %r15
 	pushq %rbp
 	pushq %rbx
-	subq $8, %rsp
+	subq $12, %rsp
 
 	movq %rdi, %r12								//move img to r12
 	movq %rsi, %r13								//move rect to r13
@@ -527,7 +527,7 @@ draw_rect:
 	movl $0, %esi								//store 0 in esi
 	movl IMAGE_HEIGHT_OFFSET(%r12), %edx		//store img->height in edx
 	call clamp									//call clamp
-	movl %eax, %r10d							//store max_y in r10d
+	movl %eax, 0(%rsp)							//store max_y in stack
 	movl %ebx, %r13d							//set y position to min_y
 
 .LtopInnerLoop:
@@ -537,7 +537,7 @@ draw_rect:
 	movl %r14d, %ecx							//prepare color for function call
 	call draw_pixel								//call draw_pixel
 	incl %r13d									//increment y position
-	cmpl %r13d, %r10d							//see if y position reached max_y
+	cmpl %r13d, 0(%rsp)							//see if y position reached max_y
 	jg .LtopInnerLoop							//if y position has not reached max_y, draw pixel again with higher y position
 	jmp .LtopCheckOuterLoop						//if all pixels along the row have been drawn, go to outer loop
 
@@ -553,7 +553,7 @@ draw_rect:
 
 .Lend:
 	/*align the stack pointer*/
-	addq $8, %rsp
+	addq $12, %rsp
 	popq %rbx
 	popq %rbp
 	popq %r15

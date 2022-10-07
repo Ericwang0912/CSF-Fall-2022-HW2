@@ -613,7 +613,7 @@ draw_circle:
 	call draw_pixel							// draw the pixel
 	jmp .Ladvance
 
-.Ladvance
+.Ladvance:
 	incl %r15d
 	jmp .Lloopj
 

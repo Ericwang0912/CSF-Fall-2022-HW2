@@ -593,38 +593,36 @@ draw_circle:
 	call square								// call square
 	movq %rax, %rbx							// move radius^2 into rbx
 	movl %r8d, 0(%rsp)						// move the color value into rsp
-	
+		
 .Lloopj:
-	movl %r15d, %edi						// x1 = j
-	movl %r14d, %esi						// y1 = i
-	movl %r12d, %edx						// x2 = x
-	movl %r13d, %ecx						// y2 = y
-	call square_dist						// call square_dist
-	cmpq %rax, %rbx							// compare square_dist to square
-	jl .Ladvancej							// if square dist is greater than square, then don't draw pixel
-	movq %rbp, %rdi							// move the Image pointer back into rdi	
-	movl %r12d, %esi						// move r12d back into esi (x)
-	movl %r13d, %edx						// move r13d back into ecx (y)
-	movl 0(%rsp), %ecx						// move the color into ecx
-	call draw_pixel							// draw the pixel
-	incl %r15d								//increment j
-	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)	//compare j and image width
-	jg .Lloopj								//if j has not yet reached img->height, draw pixel again with higher y position
-	jmp .LtopChecki							//if all pixels along the row have been drawn, go to outer loop
+        cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)            // compare j and image width                           
+        jle .LtopChecki                                 // if all pixels along the row have been iterated over go to outer loop                                                                                             
+        movl %r14d, %edi                                // x1 = j                                              
+        movl %r15d, %esi                                // y1 = i                                              
+        movl %r12d, %edx                                // x2 = x                                              
+        movl %r13d, %ecx                                // y2 = y                                              
+        call square_dist                                // call square_dist                                    
+        cmpq %rax, %rbx                                 // compare square_dist to square                       
+        jl .Ladvancej                                   // if square dist is greater than square then do not draw pixel                                                                                                      
+        movq %rbp, %rdi                                 // move the Image pointer back into rdi                
+        movl %r14d, %esi                                // move j into x coordinate                            
+        movl %r15d, %edx                                // move i into y coordinate                            
+        movl 0(%rsp), %ecx                              // move the color into ecx                             
+        call draw_pixel                                 // draw the pixel                                      
 
 .Ladvancej:
-	incl %r15d
-	jmp .Lloopj
+        incl %r15d                                      // increment j                                         
+        jmp .Lloopj                                     // restart the loop                                    
 
 .Ltopicallj:
-	movl $0, %r15d								//set j position to 0
-	jmp .Lloopj									//draw pixels along new row
+        movl $0, %r15d                                  // set j position to 0                                 
+        jmp .Lloopj                                     // draw pixels along new row                           
 
 .LtopChecki:
-	incl %r14d									//increment i position
-	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)		//see if x position reached max_x
-	jg .Ltopicallj								//increment j if i is within bounds
-	jmp .Lover									//if all pixels in the image have been drawn, end function
+        incl %r14d                                      // increment i                                         
+        cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)           // see if x position reached max_x                     
+        jg .Ltopicallj                                  // increment j if i is within bounds                   
+        jmp .Lover                                      // if all pixels in the image have been drawn, end function                              
 	
 .Lover:
 	// restore the values of callee-saved registers

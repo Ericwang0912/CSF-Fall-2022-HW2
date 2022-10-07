@@ -592,14 +592,10 @@ draw_circle:
 	movl %ecx, %ebx				// move the radius into rbx
 	movl %r8d, 0(%rsp)			// move the color value into rsp
 	
-.Lloopi:
-	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)	// compare image height to i
-	jle .Lover								// if greater than or equal, jump to over
-	
 .Lloopj:
-	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)	// compare image width to j
-	jle .Lloopi								// if greater than or equal, jump back to i
-	movl %r15d, %edi						// move the radius into rdi
+	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)
+	jle .LtopChecki							//if y position has not reached max_y, draw pixel again with higher y position
+	movl %ecx, %edi							// move the radius into rdi
 	call square								// call square
 	movq %rax, %r10							// move the square result into r10
 	movl %r15d, %edi						// x1 = j
@@ -609,17 +605,27 @@ draw_circle:
 	call square_dist						// call square_dist
 	movq %rax, %r11							// move the square_dist result into r11
 	cmpq %r10, %r11							// compare square_dist to square
-	jl .Ladvance							// if greater than, then don't draw pixel
+	jg .Ladvance							// if square dist is greater than square, then don't draw pixel
 	movl %r12d, %esi						// move r12d back into esi (x)
 	movl %r13d, %edx						// move r13d back into ecx (y)
 	movq %rbp, %rdi							// move the Image pointer back into rdi
 	movl 0(%rsp), %ecx						// move the color into ecx
 	call draw_pixel							// draw the pixel
-	
-.Ladvance:
-	incl %r14d								// increment r14d
-	incl %r15d								// increment r15d
-	jmp .Lloopj								// once its done, jump back up
+	jmp .Ladvance
+
+.Ladvance
+	incl %r15d
+	jmp .Lloopj
+
+.Ltopicallj:
+	movl $0, %r15d								//set j position to 0
+	jmp .Lloopj									//if i has not reached img->height, draw new pixels in the same row
+
+.LtopChecki:
+	incl %r14d									//increment i position
+	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)		//see if x position reached max_x
+	jg .Ltopcallj
+	jmp .Lover									//if all pixels in the image have been drawn, end function
 	
 .Lover:
 	// restore the values of callee-saved registers

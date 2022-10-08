@@ -591,8 +591,8 @@ draw_circle:
 	movl $0, %r15d					// move 0 in r15d (j)
 	movq %rdi, %rbp					// move the Image pointer to rbp
 	movslq %ecx, %rdi				// move the radius into rdi
-	call square					// call square
-	movq %rax, %rbx					// move radius^2 into rbx
+	imulq %rdi, %rdi				//multiply rdi by rdi and store in rdi
+	movq %rdi, %rbx					// move radius^2 into rbx
 	movl %r8d, 0(%rsp)				// move the color value into rsp
 
 .Lloopi:

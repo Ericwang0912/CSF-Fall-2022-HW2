@@ -412,8 +412,8 @@ square_dist:
 	
 	// restore the values of callee-saved registers
 	addq $8, %rsp 		 // restore the stack pointer
-	popq %r12
 	popq %r13
+	popq %r12
     ret
 
 

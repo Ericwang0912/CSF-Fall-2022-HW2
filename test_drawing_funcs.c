@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
 
   // TEST() directives for main functions
   TEST(test_draw_pixel);
-  //TEST(test_draw_rect);
+  TEST(test_draw_rect);
   TEST(test_draw_circle);
   TEST(test_draw_circle_clip);
   //TEST(test_draw_tile);
@@ -155,7 +155,7 @@ void test_draw_pixel(TestObjs *objs) {
   ASSERT(objs->small.data[SMALL_IDX(4, 2)] == 0x000040FF);
 }
 
-/*void test_draw_rect(TestObjs *objs) {
+void test_draw_rect(TestObjs *objs) {
   struct Rect red_rect = { .x = 2, .y = 2, .width=3, .height=3 };
   struct Rect blue_rect = { .x = 3, .y = 3, .width=3, .height=3 };
   draw_rect(&objs->small, &red_rect, 0xFF0000FF); // red is full-intensity, full opacity
@@ -177,7 +177,7 @@ void test_draw_pixel(TestObjs *objs) {
   };
 
   check_picture(&objs->small, &expected);
-}*/
+}
 
 void test_draw_circle(TestObjs *objs) {
   Picture expected = {

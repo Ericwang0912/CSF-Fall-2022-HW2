@@ -633,51 +633,7 @@ draw_circle:
         popq %r14                                                                               
         popq %r13                                                                            
         popq %r12
-	ret
-	
-	/*		
-
-.Lloopj:
-        cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)            // compare j and image width                           
-        jl .LtopChecki                                 // if all pixels along the row have been iterated over go to outer loop 
-        movl %r15d, %edi                                // x1 = j                                              
-        movl %r14d, %esi                                // y1 = i                                              
-        movl %r12d, %edx                                // x2 = x                                              
-        movl %r13d, %ecx                                // y2 = y                                              
-        call square_dist                                // call square_dist 
-	cmpq %rax, %rbx					// compare square_dist to square
-        jl .Ladvancej                                   // if square dist is greater than square then do not draw pixel         
-        movq %rbp, %rdi                                 // move the Image pointer back into rdi                
-        movl %r15d, %esi                                // move j into x coordinate                            
-        movl %r14d, %edx                                // move i into y coordinate                            
-        movl 0(%rsp), %ecx                              // move the color into ecx                             
-        call draw_pixel                                 // draw the pixel                                      
-
-.Ladvancej:
-        incl %r15d                                      // increment j       
-        jmp .Lloopj                                     // restart the loop                                    
-
-.Ltopicallj:
-        movl $0, %r15d                                  // set j position to 0                                 
-        jmp .Lloopj                                     // draw pixels along new row                           
-
-.LtopChecki:
-        incl %r14d                             // increment i                                         
-        cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)           // see if x position reached max_x                     
-        jg .Ltopicallj                                 // increment j if i is within bounds                   
-        jmp .Lover                                      // if all pixels in the image have been drawn, end function                              
-	
-.Lover:
-	// restore the values of callee-saved registers
-	addq $12, %rsp
-	popq %rbx
-	popq %rbp
-	popq %r15
-	popq %r14
-	popq %r13
-	popq %r12
-	ret
-	*/
+		ret
 
 
 	

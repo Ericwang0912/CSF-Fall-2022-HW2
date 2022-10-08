@@ -553,6 +553,7 @@ draw_rect:
 
 .Lend:
 	/*align the stack pointer*/
+	movl $0, %eax
 	addq $12, %rsp
 	popq %rbx
 	popq %rbp

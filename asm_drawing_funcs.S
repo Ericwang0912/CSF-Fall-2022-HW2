@@ -441,10 +441,10 @@ draw_pixel:
 	pushq %r15
 	subq $8, %rsp
 
+	movq %rdi, %r15		//store pointer to struct Image in r15
 	movl %esi, %r12d	//store x coordinate in r12d
     movl %edx, %r13d	//store y coordinate in r13d
 	movl %ecx, %r14d	//store color value in r14d
-	movq %rdi, %r15		//store pointer to struct Image in r15
 	call in_bounds		// store in_bounds result in eax
 	cmpl $1, %eax		// compare 1 to eax
 	je .LoutOfRange		// if in_bounds is 1, jump to LoutOfRange
@@ -577,7 +577,7 @@ draw_rect:
 	.globl draw_circle
 draw_circle:
 	// align the stack pointer
-	pushq %r10
+	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
@@ -585,7 +585,7 @@ draw_circle:
 	pushq %rbx
 	subq $12, %rsp
 	
-	movl %esi, %r10d				// move x in r12d
+	movl %esi, %r12d				// move x in r12d
 	movl %edx, %r13d				// move y in r13d
 	movl $0, %r14d					// move 0 in r14d (i)
 	movl $0, %r15d					// move 0 in r15d (j)
@@ -605,7 +605,7 @@ draw_circle:
     je .Ldonej										//if j is equal to img->width, end j loop
 	movl %r15d, %edi                               	// x1 = j 
     movl %r14d, %esi                                // y1 = i    
-    movl %r10d, %edx                                // x2 = x 
+    movl %r12d, %edx                                // x2 = x 
     movl %r13d, %ecx                                // y2 = y        
     call square_dist                                // call square_dist     
     cmpq %rax, %rbx                                 // compare square_dist to square
@@ -632,7 +632,7 @@ draw_circle:
         popq %r15                                                                           
         popq %r14                                                                               
         popq %r13                                                                            
-        popq %r10
+        popq %r12
 		ret
 
 

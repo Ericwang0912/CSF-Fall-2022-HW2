@@ -591,32 +591,30 @@ draw_circle:
 	movl $0, %r15d					// move 0 in r15d (j)
 	movq %rdi, %rbp					// move the Image pointer to rbp
 	movslq %ecx, %rdi				// move the radius into rdi
-	imulq %rdi, %rdi				//multiply rdi by rdi and store in rdi
-	movq %rdi, %rbx					// move radius^2 into rbx
+	call square						// call square
+	movq %rax, %rbx					// move radius^2 into rbx
 	movl %r8d, 0(%rsp)				// move the color value into rsp
 
 .Lloopi:
-	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)
-	je .Lover
-	movl $0, %r15d
+	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)			//compare i to image->height
+	je .Lover										//if i is equal to img->height, end loop
+	movl $0, %r15d									//if i < img->height, set j to 0
 
 .Lloopj:
-	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)
-        je .Ldonej
-	movl %r15d, %edi                                // x1 = j 
-        movl %r14d, %esi                                // y1 = i    
-        movl %r12d, %edx                                // x2 = x 
-        movl %r13d, %ecx                                // y2 = y        
-        call square_dist                                // call square_dist     
-        cmpq %rax, %rbx                                 // compare square_dist to square
-        jl .Lcheckj	       // if square dist is greater than square then do not draw pixel
-        movq %rbp, %rdi                                 // move the Image pointer back into rdi 
-        movl %r15d, %esi                                // move j into x coordinate 
-        movl %r14d, %edx                                // move i into y coordinate  
-        movl 0(%rsp), %ecx                              // move the color into ecx 
-        call draw_pixel                                 // draw the pixel
-
-	jmp .Lcheckj
+	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)			//compare j to img->width
+    je .Ldonej										//if j is equal to img->width, end j loop
+	movl %r15d, %edi                               	// x1 = j 
+    movl %r14d, %esi                                // y1 = i    
+    movl %r12d, %edx                                // x2 = x 
+    movl %r13d, %ecx                                // y2 = y        
+    call square_dist                                // call square_dist     
+    cmpq %rax, %rbx                                 // compare square_dist to square
+    jl .Lcheckj	       								// if square dist is greater than square then do not draw pixel
+    movq %rbp, %rdi                                 // move the Image pointer back into rdi 
+    movl %r15d, %esi                                // move j into x coordinate 
+    movl %r14d, %edx                                // move i into y coordinate  
+    movl 0(%rsp), %ecx                              // move the color into ecx 
+    call draw_pixel                                 // draw the pixel
 
 .Lcheckj:
 	incl %r15d

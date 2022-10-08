@@ -584,34 +584,78 @@ draw_circle:
 	pushq %rbx
 	subq $12, %rsp
 	
-	movl %esi, %r12d						// move x in r12d
-	movl %edx, %r13d						// move y in r13d
-	movl $0, %r14d							// move 0 in r14d (i)
-	movl $0, %r15d							// move 0 in r15d (j)
-	movq %rdi, %rbp							// move the Image pointer to rbp
-	movslq %ecx, %rdi						// move the radius into rdi
-	call square								// call square
-	movq %rax, %rbx							// move radius^2 into rbx
-	movl %r8d, 0(%rsp)						// move the color value into rsp
-		
+	movl %esi, %r12d				// move x in r12d
+	movl %edx, %r13d				// move y in r13d
+	movl $0, %r14d					// move 0 in r14d (i)
+	//movl $0, %r15d					// move 0 in r15d (j)
+	movq %rdi, %rbp					// move the Image pointer to rbp
+	movslq %ecx, %rdi				// move the radius into rdi
+	call square					// call square
+	movq %rax, %rbx					// move radius^2 into rbx
+	movl %r8d, 0(%rsp)				// move the color value into rsp
+
+.Lloopi:
+	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)
+	je .Lover
+	movl $0, %r15d
+
+.Lloopj:
+	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)
+        je .Ldonej
+	movl %r15d, %edi                                // x1 = j 
+        movl %r14d, %esi                                // y1 = i    
+        movl %r12d, %edx                                // x2 = x 
+        movl %r13d, %ecx                                // y2 = y        
+        call square_dist                                // call square_dist     
+        cmpq %rax, %rbx                                 // compare square_dist to square
+        jl .Lcheckj	       // if square dist is greater than square then do not draw pixel
+        movq %rbp, %rdi                                 // move the Image pointer back into rdi 
+        movl %r15d, %esi                                // move j into x coordinate 
+        movl %r14d, %edx                                // move i into y coordinate  
+        movl 0(%rsp), %ecx                              // move the color into ecx 
+        call draw_pixel                                 // draw the pixel
+
+	jmp .Lcheckj
+
+.Lcheckj:
+	incl %r15d
+	jmp .Lloopj
+
+.Ldonej:
+	incl %r14d
+	jmp .Lloopi
+	
+.Lover:
+	// restore the values of callee-saved registers            
+        addq $12, %rsp                                                                  
+        popq %rbx                                                                             
+        popq %rbp                                                                           
+        popq %r15                                                                           
+        popq %r14                                                                               
+        popq %r13                                                                            
+        popq %r12
+	ret
+	
+	/*		
+
 .Lloopj:
         cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)            // compare j and image width                           
-        jle .LtopChecki                                 // if all pixels along the row have been iterated over go to outer loop                                                                                             
-        movl %r14d, %edi                                // x1 = j                                              
-        movl %r15d, %esi                                // y1 = i                                              
+        jl .LtopChecki                                 // if all pixels along the row have been iterated over go to outer loop 
+        movl %r15d, %edi                                // x1 = j                                              
+        movl %r14d, %esi                                // y1 = i                                              
         movl %r12d, %edx                                // x2 = x                                              
         movl %r13d, %ecx                                // y2 = y                                              
-        call square_dist                                // call square_dist                                    
-        cmpq %rax, %rbx                                 // compare square_dist to square                       
-        jl .Ladvancej                                   // if square dist is greater than square then do not draw pixel                                                                                                      
+        call square_dist                                // call square_dist 
+	cmpq %rax, %rbx					// compare square_dist to square
+        jl .Ladvancej                                   // if square dist is greater than square then do not draw pixel         
         movq %rbp, %rdi                                 // move the Image pointer back into rdi                
-        movl %r14d, %esi                                // move j into x coordinate                            
-        movl %r15d, %edx                                // move i into y coordinate                            
+        movl %r15d, %esi                                // move j into x coordinate                            
+        movl %r14d, %edx                                // move i into y coordinate                            
         movl 0(%rsp), %ecx                              // move the color into ecx                             
         call draw_pixel                                 // draw the pixel                                      
 
 .Ladvancej:
-        incl %r15d                                      // increment j                                         
+        incl %r15d                                      // increment j       
         jmp .Lloopj                                     // restart the loop                                    
 
 .Ltopicallj:
@@ -619,9 +663,9 @@ draw_circle:
         jmp .Lloopj                                     // draw pixels along new row                           
 
 .LtopChecki:
-        incl %r14d                                      // increment i                                         
+        incl %r14d                             // increment i                                         
         cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)           // see if x position reached max_x                     
-        jg .Ltopicallj                                  // increment j if i is within bounds                   
+        jg .Ltopicallj                                 // increment j if i is within bounds                   
         jmp .Lover                                      // if all pixels in the image have been drawn, end function                              
 	
 .Lover:
@@ -634,7 +678,10 @@ draw_circle:
 	popq %r13
 	popq %r12
 	ret
+	*/
 
+
+	
 /*
  * Draw a tile by copying all pixels in the region
  * enclosed by the tile parameter in the tilemap image

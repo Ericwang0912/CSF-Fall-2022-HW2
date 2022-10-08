@@ -587,7 +587,7 @@ draw_circle:
 	movl %esi, %r12d				// move x in r12d
 	movl %edx, %r13d				// move y in r13d
 	movl $0, %r14d					// move 0 in r14d (i)
-	//movl $0, %r15d					// move 0 in r15d (j)
+	movl $0, %r15d					// move 0 in r15d (j)
 	movq %rdi, %rbp					// move the Image pointer to rbp
 	movslq %ecx, %rdi				// move the radius into rdi
 	call square					// call square

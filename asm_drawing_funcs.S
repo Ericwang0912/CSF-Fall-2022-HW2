@@ -583,7 +583,7 @@ draw_circle:
 	pushq %r15
 	pushq %rbp
 	pushq %rbx
-	subq $12, %rsp
+	subq $28, %rsp
 	
 	movl %esi, %r12d				// move x in r12d
 	movl %edx, %r13d				// move y in r13d
@@ -626,7 +626,7 @@ draw_circle:
 	
 .Lover:
 	// restore the values of callee-saved registers            
-        addq $12, %rsp                                                                  
+        addq $28, %rsp                                                                  
         popq %rbx                                                                             
         popq %rbp                                                                           
         popq %r15                                                                           

@@ -70,7 +70,7 @@ uint32_t lookup_color(char c, const ExpectedColor *colors) {
   }
 }
 
-/*void check_picture(struct Image *img, Picture *p) {
+void check_picture(struct Image *img, Picture *p) {
   unsigned num_pixels = img->width * img->height;
   assert(strlen(p->pic) == num_pixels);
 
@@ -80,7 +80,7 @@ uint32_t lookup_color(char c, const ExpectedColor *colors) {
     uint32_t actual_color = img->data[i];
     ASSERT(actual_color == expected_color);
   }
-}*/
+}
 
 // prototypes of test main functions
 void test_draw_pixel(TestObjs *objs);

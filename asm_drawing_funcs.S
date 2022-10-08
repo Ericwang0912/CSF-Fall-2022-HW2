@@ -581,36 +581,36 @@ draw_circle:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	pushq %rbp
 	pushq %rbx
+	pushq %rbp
 	subq $12, %rsp
 	
 	movl %esi, %r12d				// move x in r12d
 	movl %edx, %r13d				// move y in r13d
 	movl $0, %r14d					// move 0 in r14d (i)
 	movl $0, %r15d					// move 0 in r15d (j)
-	movq %rdi, %rbp					// move the Image pointer to rbp
+	movq %rdi, %rbx					// move the Image pointer to rbx
 	movslq %ecx, %rdi				// move the radius into rdi
 	call square						// call square
-	movq %rax, %rbx					// move radius^2 into rbx
+	movq %rax, %rbp					// move radius^2 into rbp
 	movl %r8d, 0(%rsp)				// move the color value into rsp
 
 .Lloopi:
-	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbp)			//compare i to image->height
+	cmpl %r14d, IMAGE_HEIGHT_OFFSET(%rbx)			//compare i to image->height
 	je .Lover										//if i is equal to img->height, end loop
 	movl $0, %r15d									//if i < img->height, set j to 0
 
 .Lloopj:
-	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbp)			//compare j to img->width
+	cmpl %r15d, IMAGE_WIDTH_OFFSET(%rbx)			//compare j to img->width
     je .Ldonej										//if j is equal to img->width, end j loop
 	movl %r15d, %edi                               	// x1 = j 
     movl %r14d, %esi                                // y1 = i    
     movl %r12d, %edx                                // x2 = x 
     movl %r13d, %ecx                                // y2 = y        
     call square_dist                                // call square_dist     
-    cmpq %rax, %rbx                                 // compare square_dist to square
+    cmpq %rax, %rbp                                 // compare square_dist to square
     jl .Lcheckj	       								// if square dist is greater than square then do not draw pixel
-    movq %rbp, %rdi                                 // move the Image pointer back into rdi 
+    movq %rbx, %rdi                                 // move the Image pointer back into rdi 
     movl %r15d, %esi                                // move j into x coordinate 
     movl %r14d, %edx                                // move i into y coordinate  
     movl 0(%rsp), %ecx                              // move the color into ecx 
@@ -627,8 +627,8 @@ draw_circle:
 .Lover:
 	// restore the values of callee-saved registers            
         addq $12, %rsp                                                                  
-        popq %rbx                                                                             
-        popq %rbp                                                                           
+        popq %rbp                                                                             
+        popq %rbx                                                                           
         popq %r15                                                                           
         popq %r14                                                                               
         popq %r13                                                                            
